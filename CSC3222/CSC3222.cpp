@@ -2,10 +2,21 @@
 //
 
 #include "stdafx.h"
+#include "Core/GameShutdown.h"
+#include "Core/GameInitialise.h"
 
 
 int main()
 {
-    return 0;
+	GameLoop *game = GameInitialise::InitialiseGame();
+	if (game)
+	{
+		game->RunLoop();
+		GameShutdown::TerminateGame(game);
+	}
+	else
+	{
+		//Something ****ed up
+	}
 }
 

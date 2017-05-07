@@ -1,0 +1,6 @@
+0,default.tga
+1,uc.tga
+2,brick.tga
+3,deadalus.tga
+4,background.tga
+5,barrier.tga

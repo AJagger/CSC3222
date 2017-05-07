@@ -13,9 +13,24 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{577f2fef-91ba-4c8b-8a49-53b4a6d15387}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework">
+      <UniqueIdentifier>{6b1d8289-2a70-472c-a20a-46f11d39d0cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{f1aafc35-8b06-4661-8764-258e65d9e49a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\CSC3222P1">
+      <UniqueIdentifier>{4c51c5ba-32ab-4d81-bbd8-6223c5fd2057}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
+    <Text Include="Game\CSC3222P1\README.txt">
+      <Filter>Game\CSC3222P1</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -24,6 +39,57 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Core\GameInitialise.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\GameLoop.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\GameObject.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\GameScene.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\GameShutdown.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\GameState.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\stdafx.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Frameworks\DataArray.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Frameworks\Draw.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Frameworks\KeyInterpreter.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Frameworks\PhysicsResolver.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Frameworks\ResouceLoader.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Frameworks\stdafx.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\CSC3222P1\DemoGameObject.h">
+      <Filter>Game\CSC3222P1</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\CSC3222P1\DemoGameRules.h">
+      <Filter>Game\CSC3222P1</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\CSC3222P1\DemoKeyInterpreter.h">
+      <Filter>Game\CSC3222P1</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\CSC3222P1\stdafx.h">
+      <Filter>Game\CSC3222P1</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -31,6 +97,48 @@
     </ClCompile>
     <ClCompile Include="CSC3222.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\GameInitialise.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\GameLoop.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\GameObject.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\GameScene.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\GameShutdown.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\GameState.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Frameworks\DataArray.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Frameworks\Draw.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Frameworks\KeyInterpreter.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Frameworks\PhysicsResolver.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Frameworks\ResouceLoader.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\CSC3222P1\DemoGameObject.cpp">
+      <Filter>Game\CSC3222P1</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\CSC3222P1\DemoGameRules.cpp">
+      <Filter>Game\CSC3222P1</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\CSC3222P1\DemoKeyInterpreter.cpp">
+      <Filter>Game\CSC3222P1</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
