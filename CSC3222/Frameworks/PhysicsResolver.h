@@ -9,6 +9,7 @@
 #include "../Game/CSC3222P1/DemoGameObject.h"
 #include "DataArray.h"
 #include "../Game/CSC3222P1/Vec3.h"
+#include "Collision.h"
 
 struct Spring
 {
@@ -28,8 +29,9 @@ public:
 
 private:
 	DataArray<Spring> springs = DataArray<Spring>();
+	DataArray<DetectedCollision> collisions = DataArray<DetectedCollision>();
+
 	static void Integrate(State &state, float dt);
 	static Vec3 Acceleration(State &state);
 	static Vec3 DetermineSpringForce(DemoGameObject *parentObject, DemoGameObject *childObject);
-	//static void CheckSprings(DataArray<DemoGameObject> *gameObjects);
 };

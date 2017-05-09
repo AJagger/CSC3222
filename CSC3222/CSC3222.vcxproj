@@ -157,6 +157,7 @@
     <ClInclude Include="Core\GameShutdown.h" />
     <ClInclude Include="Core\GameState.h" />
     <ClInclude Include="Core\stdafx.h" />
+    <ClInclude Include="Frameworks\Collision.h" />
     <ClInclude Include="Frameworks\DataArray.h" />
     <ClInclude Include="Frameworks\Draw.h" />
     <ClInclude Include="Frameworks\KeyInterpreter.h" />
@@ -179,6 +180,7 @@
     <ClCompile Include="Core\GameShutdown.cpp" />
     <ClCompile Include="Core\GameState.cpp" />
     <ClCompile Include="CSC3222.cpp" />
+    <ClCompile Include="Frameworks\Collision.cpp" />
     <ClCompile Include="Frameworks\DataArray.cpp" />
     <ClCompile Include="Frameworks\Draw.cpp" />
     <ClCompile Include="Frameworks\KeyInterpreter.cpp" />

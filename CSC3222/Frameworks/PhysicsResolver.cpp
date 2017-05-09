@@ -43,7 +43,7 @@ void PhysicsResolver::SimulateWorld(DataArray<DemoGameObject> *gameObjects, floa
 
 
 	//Collision detection Goes here
-
+	Collision::CheckCollisions(gameObjects, &collisions);
 
 	//Integrate velocity and position
 	DemoGameObject *object = gameObjects->TryToGetFirst();
@@ -117,8 +117,8 @@ Vec3 PhysicsResolver::DetermineSpringForce(DemoGameObject * parentObject, DemoGa
 {
 	//used later for an equilibrium position where the two objects are touching but not attempting to merge
 	float springRestingLength = parentObject->currentPhysState.radius + childObject->currentPhysState.radius;
-	float k = 10;
-	float b = 0.5;
+	float k = 0.1;
+	float b = 1;
 
 	//Vector displacement
 	Vec3 x = childObject->currentPhysState.position - parentObject->currentPhysState.position;

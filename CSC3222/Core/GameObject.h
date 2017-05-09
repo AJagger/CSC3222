@@ -13,6 +13,12 @@
 
 struct State
 {
+	enum CollisionObject
+	{
+		COLLISION_CIRCLE = 0,
+		COLLISION_SQUARE = 1
+	};
+
 	//Movement data
 	Vec3 position;
 	Vec3 velocity;
@@ -20,6 +26,7 @@ struct State
 	Vec3 actingForce;
 
 	//Collision Data
+	CollisionObject collisionObject;
 	float radius;
 };
 

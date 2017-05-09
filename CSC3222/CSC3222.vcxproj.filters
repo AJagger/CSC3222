@@ -93,6 +93,9 @@
     <ClInclude Include="Game\CSC3222P1\Vec3.h">
       <Filter>Game\CSC3222P1</Filter>
     </ClInclude>
+    <ClInclude Include="Frameworks\Collision.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -142,6 +145,9 @@
     </ClCompile>
     <ClCompile Include="Game\CSC3222P1\DemoKeyInterpreter.cpp">
       <Filter>Game\CSC3222P1</Filter>
+    </ClCompile>
+    <ClCompile Include="Frameworks\Collision.cpp">
+      <Filter>Framework</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

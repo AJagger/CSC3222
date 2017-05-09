@@ -38,6 +38,7 @@ void GameScene::LoadLevel()
 	addObject->meshId = 2;
 	addObject->textureId = 4;
 	addObject->entityType = UNINITIALISED;
+	addObject->currentPhysState.position.z = -1;
 
 	//Add the tiles
 	int gridNumber = 0;
@@ -48,7 +49,8 @@ void GameScene::LoadLevel()
 			addObject = gameObjects.CreateNew();
 			//addObject->ConfigureDefaultMapTile(0, 0);
 			addObject->ConfigureDefaultMapTile(0, 2);
-			addObject->currentPhysState.position = Vec3(x, y, 0.5);
+			addObject->currentPhysState.position = Vec3(x+0.5, y+0.5, 0);
+			addObject->currentPhysState.radius = 0.55;
 			
 			//Set the Tile type:
 			switch(tiles.at(gridNumber))
@@ -66,11 +68,22 @@ void GameScene::LoadLevel()
 		}
 	}
 
-	//Add drone for testing
-	addObject = gameObjects.CreateNew();
-	addObject->ConfigureDefaultDrone(1, 1);
-	addObject->currentPhysState.position = Vec3(1, 3, 0.9);
-	addObject->currentPhysState.radius = 0.2;
+	vector<DemoGameObject*> createdDrones = vector<DemoGameObject*>();
+	for(int i = 0; i < 9 ;i++)
+	{
+		//Add drone for testing
+		addObject = gameObjects.CreateNew();
+		addObject->ConfigureDefaultDrone(1, 1);
+		addObject->currentPhysState.position = Vec3(0.5*(i + 1), 0.5*(i + 1), 0.05*(i+1));
+		addObject->currentPhysState.radius = 0.2;
+
+		createdDrones.push_back(addObject);
+	}
+	////Add drone for testing
+	//addObject = gameObjects.CreateNew();
+	//addObject->ConfigureDefaultDrone(1, 1);
+	//addObject->currentPhysState.position = Vec3(1, 3, 0.9);
+	//addObject->currentPhysState.radius = 0.2;
 
 	//Add player for testing
 	DemoGameObject *playerObject = gameObjects.CreateNew();
@@ -78,5 +91,18 @@ void GameScene::LoadLevel()
 	playerObject->currentPhysState.position = Vec3(1, 1, 1);
 	playerObject->currentPhysState.radius = 0.2;
 
-	physicsWorld.AddSpring(&gameObjects, gameObjects.GetId(*playerObject), gameObjects.GetId(*addObject));
+	//physicsWorld.AddSpring(&gameObjects, gameObjects.GetId(*playerObject), gameObjects.GetId(*addObject));
+
+	////Add drone for testing
+	//addObject = gameObjects.CreateNew();
+	//addObject->ConfigureDefaultDrone(1, 1);
+	//addObject->currentPhysState.position = Vec3(2, 1, 0.9);
+	//addObject->currentPhysState.radius = 0.2;
+
+	//physicsWorld.AddSpring(&gameObjects, gameObjects.GetId(*playerObject), gameObjects.GetId(*addObject));
+
+	for (int i = 0; i < 9; i++)
+	{
+		physicsWorld.AddSpring(&gameObjects, gameObjects.GetId(*playerObject), gameObjects.GetId(*createdDrones.at(i)));
+	}
 }
