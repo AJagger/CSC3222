@@ -13,12 +13,14 @@
 
 struct State
 {
+	//Movement data
 	Vec3 position;
 	Vec3 velocity;
-
 	float mass;
-
 	Vec3 actingForce;
+
+	//Collision Data
+	float radius;
 };
 
 class GameObject

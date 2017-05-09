@@ -16,6 +16,7 @@ GameScene::GameScene(DataArray<Mesh*> *gameMeshes, DataArray<GLuint> *gameTextur
 {
 	this->gameMeshes = gameMeshes;
 	this->gameTextures = gameTextures;
+	physicsWorld = PhysicsResolver();
 }
 
 GameScene::~GameScene()
@@ -65,8 +66,17 @@ void GameScene::LoadLevel()
 		}
 	}
 
-	//Add player for testing
+	//Add drone for testing
 	addObject = gameObjects.CreateNew();
-	addObject->ConfigureDefaultPlayer(1, 2);
-	addObject->currentPhysState.position = Vec3(1, 1, 1);
+	addObject->ConfigureDefaultDrone(1, 1);
+	addObject->currentPhysState.position = Vec3(1, 3, 0.9);
+	addObject->currentPhysState.radius = 0.2;
+
+	//Add player for testing
+	DemoGameObject *playerObject = gameObjects.CreateNew();
+	playerObject->ConfigureDefaultPlayer(1, 2);
+	playerObject->currentPhysState.position = Vec3(1, 1, 1);
+	playerObject->currentPhysState.radius = 0.2;
+
+	physicsWorld.AddSpring(&gameObjects, gameObjects.GetId(*playerObject), gameObjects.GetId(*addObject));
 }

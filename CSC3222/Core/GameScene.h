@@ -22,6 +22,7 @@ public:
 	DataArray<DemoGameObject> gameObjects = DataArray<DemoGameObject>();
 	DataArray<Mesh*> *gameMeshes;
 	DataArray<GLuint> *gameTextures;
+	PhysicsResolver physicsWorld;
 
 	void LoadLevel();
 

@@ -10,16 +10,26 @@
 #include "DataArray.h"
 #include "../Game/CSC3222P1/Vec3.h"
 
+struct Spring
+{
+	int parentId, childId;
+	DemoGameObject *parentObject;
+	DemoGameObject *childObject;
+};
+
 class PhysicsResolver
 {
 public:
 	PhysicsResolver();
 	~PhysicsResolver();
 
-	//static void SimulateActions(DataArray<DemoGameObject> *gameObjects);
 	void SimulateWorld(DataArray<DemoGameObject> *gameObjects, float dt);
+	void AddSpring(DataArray<DemoGameObject> *gameObjects, int parentId, int childId);
 
 private:
-	void Integrate(State &state, float dt);
-	Vec3 Acceleration(State &state);
+	DataArray<Spring> springs = DataArray<Spring>();
+	static void Integrate(State &state, float dt);
+	static Vec3 Acceleration(State &state);
+	static Vec3 DetermineSpringForce(DemoGameObject *parentObject, DemoGameObject *childObject);
+	//static void CheckSprings(DataArray<DemoGameObject> *gameObjects);
 };

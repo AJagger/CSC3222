@@ -33,7 +33,6 @@ void GameLoop::RunLoop()
 	//Set up the Key Interpreter to process user input and the Draw class to interface between the renderer and other parts of the engine
 	DemoKeyInterpreter keyInterp = DemoKeyInterpreter();
 	Draw renderer = Draw();
-	PhysicsResolver physicsWorld = PhysicsResolver();
 
 	lastTick = clock();
 
@@ -56,7 +55,7 @@ void GameLoop::RunLoop()
 			//DemoGameRules::EnactGameRules(scene, state);
 			//UpdatePositions (collision detection & resolution happens here)
 			//PhysicsResolver::SimulateActions(&scene->gameObjects);
-			physicsWorld.SimulateWorld(&scene->gameObjects, dt);
+			scene->physicsWorld.SimulateWorld(&scene->gameObjects, dt);
 			//TempPositionUpdater();
 			//RenderScene
 			renderer.RenderObjects(scene, state);
