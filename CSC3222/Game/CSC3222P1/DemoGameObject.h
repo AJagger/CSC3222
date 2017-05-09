@@ -11,30 +11,38 @@
 
 enum GameEntityType
 {
-	STATIC_OBJECT = 0,
-	NPC = 1,
+	MAP_TILE = 0,
+	DRONE = 1,
 	PLAYER = 2,
-	PROJECTILE = 3,
-	EFFECT = 4,
-	UNINITIALISED = 5
+	UNINITIALISED = 3
+};
+
+enum TerrainType
+{
+	BASE_CAMP = 0,
+	OPEN_TERRAIN = 1,
+	COVERED_TERRAIN = 2,
+	FOREST = 3,
+	RIVER = 4,
+	GATE = 5,
+	WALL = 6,
+	UNDEFINED_TERRAIN = 7,
+	INSIDE_CASTLE = 8
 };
 
 class DemoGameObject : public GameObject
 {
 public:
 	DemoGameObject();
-	DemoGameObject(GameEntityType type, int meshId, int textureId = 0);
 	~DemoGameObject();
 
 	GameEntityType entityType;
-	bool hasTarget;					// hasTarget &
-	int targetObjectId;				// targetObjectId used for NPCs & Projectiles
-	int lifeTime;					// lifeTime used for Effects
+	TerrainType terrainType;
+	bool playerControlled;
+	float velocityModifier;
 
-	void ConfigureDefaultStatic(int meshId, int textureId = 0);
-	void ConfigureDefaultNPC(int meshId, int textureId = 0);
+	void ConfigureDefaultMapTile(int meshId, int textureId = 0);
+	void ConfigureDefaultDrone(int meshId, int textureId = 0);
 	void ConfigureDefaultPlayer(int meshId, int textureId = 0);
-	void ConfigureDefaultProjectile(int meshId, int textureId = 0);
-	void ConfigureDefaultEffect(int meshId, int textureId = 0);
 
 };

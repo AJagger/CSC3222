@@ -33,6 +33,7 @@ void GameLoop::RunLoop()
 	//Set up the Key Interpreter to process user input and the Draw class to interface between the renderer and other parts of the engine
 	DemoKeyInterpreter keyInterp = DemoKeyInterpreter();
 	Draw renderer = Draw();
+	PhysicsResolver physicsWorld = PhysicsResolver();
 
 	lastTick = clock();
 
@@ -45,15 +46,18 @@ void GameLoop::RunLoop()
 		//If the game is not paused and we're ready for a new tick...
 		if (!state->paused && (clock() - lastTick) >= tickLength)
 		{
-			lastTick = clock();
+			float timeUpdate = clock();
+			float dt = timeUpdate - lastTick;
+			lastTick = timeUpdate;
 
 			//Process Inputs
 			keyInterp.ProcessKeyPresses(input, *state, *scene);
-			//AI Processes Insert point - the game idea I have has very rudimentary AI processes which can be created when creating the actual game
 			//Process GameRules
-			DemoGameRules::EnactGameRules(scene, state);
+			//DemoGameRules::EnactGameRules(scene, state);
 			//UpdatePositions (collision detection & resolution happens here)
-			PhysicsResolver::SimulateActions(&scene->gameObjects);
+			//PhysicsResolver::SimulateActions(&scene->gameObjects);
+			physicsWorld.SimulateWorld(&scene->gameObjects, dt);
+			//TempPositionUpdater();
 			//RenderScene
 			renderer.RenderObjects(scene, state);
 		}
@@ -76,25 +80,25 @@ void GameLoop::SetTickLength(int tickLength)
 
 
 //Temporary position updater to allow the game loop to function with no physics engine for testing/debugging
-void GameLoop::TempPositionUpdater()
-{
-	DemoGameObject *returnedEntity = scene->gameObjects.TryToGetFirst();
-	if (returnedEntity != nullptr)
-	{
-		if (!returnedEntity->staticObject)
-		{
-			returnedEntity->position = returnedEntity->position + Vector3(returnedEntity->movementVector.x, returnedEntity->movementVector.y, 0);
-			returnedEntity->movementVector.ToZero();
-		}
-
-		while (scene->gameObjects.IsNext())
-		{
-			returnedEntity = scene->gameObjects.Next();
-			if (!returnedEntity->staticObject)
-			{
-				returnedEntity->position = returnedEntity->position + Vector3(returnedEntity->movementVector.x, returnedEntity->movementVector.y, 0);
-				returnedEntity->movementVector.ToZero();
-			}
-		}
-	}
-}
+//void GameLoop::TempPositionUpdater()
+//{
+//	DemoGameObject *returnedEntity = scene->gameObjects.TryToGetFirst();
+//	if (returnedEntity != nullptr)
+//	{
+//		if (returnedEntity->entityType == PLAYER)
+//		{
+//			returnedEntity->position = returnedEntity->position + Vector3(returnedEntity->movementVector.x, returnedEntity->movementVector.y, 0);
+//			returnedEntity->movementVector.ToZero();
+//		}
+//
+//		while (scene->gameObjects.IsNext())
+//		{
+//			returnedEntity = scene->gameObjects.Next();
+//			if (returnedEntity->entityType == PLAYER)
+//			{
+//				returnedEntity->position = returnedEntity->position + Vector3(returnedEntity->movementVector.x, returnedEntity->movementVector.y, 0);
+//				returnedEntity->movementVector.ToZero();
+//			}
+//		}
+//	}
+//}

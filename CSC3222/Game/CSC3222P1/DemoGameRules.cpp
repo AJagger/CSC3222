@@ -40,7 +40,7 @@ bool DemoGameRules::CheckVictoryConditions(GameScene * gameScene, GameState * ga
 	{
 		if (returnedEntity->playerControlled)
 		{
-			if (returnedEntity->position.x >= victoryPosition.x && returnedEntity->position.y >= victoryPosition.y)
+			if (returnedEntity->currentPhysState.position.x >= victoryPosition.x && returnedEntity->currentPhysState.position.y >= victoryPosition.y)
 			{
 				victory = true; //Player craft has reached the end of the demo maze!
 			}
@@ -51,7 +51,7 @@ bool DemoGameRules::CheckVictoryConditions(GameScene * gameScene, GameState * ga
 			returnedEntity = gameScene->gameObjects.Next();
 			if (returnedEntity->playerControlled)
 			{
-				if (returnedEntity->position.x >= victoryPosition.x && returnedEntity->position.y >= victoryPosition.y)
+				if (returnedEntity->currentPhysState.position.x >= victoryPosition.x && returnedEntity->currentPhysState.position.y >= victoryPosition.y)
 				{
 					victory = true; //Player craft has reached the end of the demo maze!
 				}

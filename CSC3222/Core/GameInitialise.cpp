@@ -35,12 +35,12 @@ GameLoop* GameInitialise::InitialiseGame()
 		DataArray<Mesh*> *gameMeshes = new DataArray<Mesh*>();
 		DataArray<GLuint> *gameTextures = new DataArray<GLuint>();
 
-		if(ResourceLoader::LoadMeshes(gameMeshes, "Game\\DemoCode\\DemoMeshes") &&
-			ResourceLoader::LoadTextures(gameTextures, "Game\\DemoCode\\DemoTextures"))
+		if(ResourceLoader::LoadMeshes(gameMeshes, "Game\\CSC3222P1\\DemoMeshes") &&
+			ResourceLoader::LoadTextures(gameTextures, "Game\\CSC3222P1\\DemoTextures"))
 		{
 			//Initialise Game Scene & load test level
 			GameScene* gameScene = new GameScene(gameMeshes, gameTextures);
-			gameScene->LoadLevel("Game\\DemoCode\\DemoLevelData\\DemoScene.csv");
+			gameScene->LoadLevel();
 
 			GameLoop* gameLoop = new GameLoop(gameState, gameScene);
 			return gameLoop;
@@ -58,7 +58,7 @@ GameLoop* GameInitialise::InitialiseGame()
 
 bool GameInitialise::InitSoundEngine()
 {
-	return false;
+	return true;
 }
 
 

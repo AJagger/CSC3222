@@ -9,25 +9,30 @@
 #include <string>
 #include "../Renderer/nclgl/Vector2.h"
 #include "../Renderer/nclgl/Vector3.h"
+#include "../Game/CSC3222P1/Vec3.h"
+
+struct State
+{
+	Vec3 position;
+	Vec3 velocity;
+
+	float mass;
+
+	Vec3 actingForce;
+};
 
 class GameObject
 {
 public:
 	GameObject();
-	GameObject(bool AIEnabled, bool physicsEnabled, std::string entityName);
 	~GameObject();
-
-	bool playerControlled;
-	bool hostile;
-	bool AIEnabled;
-	bool physicsEnabled;
-	bool collisionsEnabled;
-	bool staticObject;
-	std::string entityName;
 	
-	Vector3 position;
-	Vector2 movementVector;
-	float rotation;
+	//Vector3 position;
+	//Vector2 movementVector;
+	//float rotation;
+
+	State previousPhysState;
+	State currentPhysState;
 
 	int meshId;
 	int textureId;

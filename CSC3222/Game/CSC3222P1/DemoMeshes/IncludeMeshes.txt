@@ -1,5 +1,3 @@
 0,square.asciimesh
-1,triangle.asciimesh
-2,deadalus.asciimesh
-3,bigSquare.asciimesh
-4,demoBackground.asciimesh
+1,smallSquare.asciimesh
+2,mapBackground.asciimesh

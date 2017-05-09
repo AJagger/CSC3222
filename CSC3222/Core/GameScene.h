@@ -23,7 +23,6 @@ public:
 	DataArray<Mesh*> *gameMeshes;
 	DataArray<GLuint> *gameTextures;
 
-	void LoadLevel(const string &sceneFile);
-	void LoadTestLevel();
+	void LoadLevel();
 
 };

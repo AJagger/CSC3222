@@ -11,148 +11,52 @@
 DemoGameObject::DemoGameObject()
 {
 	entityType = UNINITIALISED;
-}
+	terrainType = UNDEFINED_TERRAIN;
+	currentPhysState.position = Vec3(0, 0, 0);
+	currentPhysState.velocity = Vec3(0, 0, 0);
+	currentPhysState.actingForce = Vec3(0, 0, 0);
+	currentPhysState.mass = 1;
 
-//Configure the DemoGameObject with default values depending on the GameEntityType assigned to it.
-DemoGameObject::DemoGameObject(GameEntityType type, int meshId, int textureId)
-{
-	if(type == STATIC_OBJECT)
-	{
-		ConfigureDefaultStatic(meshId, textureId);
-	} 
-	else if(type == NPC)
-	{
-		ConfigureDefaultNPC(meshId, textureId);
-	}
-	else if (type == PLAYER)
-	{
-		ConfigureDefaultPlayer(meshId, textureId);
-	}
-	else if (type == PROJECTILE)
-	{
-		ConfigureDefaultProjectile(meshId, textureId);
-	}
-	else if (type == EFFECT)
-	{
-		ConfigureDefaultEffect(meshId, textureId);
-	}
+	velocityModifier = 1.0;
+	playerControlled = false;
+
+	meshId = 0;
+	textureId = 0;
+	physMeshId = 0;
 }
 
 DemoGameObject::~DemoGameObject()
 {
 }
 
-void DemoGameObject::ConfigureDefaultStatic(int meshId, int textureId)
+void DemoGameObject::ConfigureDefaultMapTile(int meshId, int textureId)
 {
-	entityType = STATIC_OBJECT;
-	playerControlled = false;
-	hostile = false;
-	AIEnabled = false;
-	physicsEnabled = false;
-	collisionsEnabled = true;
-	staticObject = true;
-	entityName = "DefaultObject";
-
-	hasTarget = false;
-	targetObjectId = -1;
-	lifeTime = 0;
-
-	position = Vector3(0, 0, 0);
-	movementVector = Vector2(0, 0);
-	rotation = 0;
+	entityType = MAP_TILE;
+	terrainType = UNDEFINED_TERRAIN;
 
 	this->meshId = meshId;
 	this->textureId = textureId;
+	physMeshId = 0;
 }
 
-void DemoGameObject::ConfigureDefaultNPC(int meshId, int textureId)
+void DemoGameObject::ConfigureDefaultDrone(int meshId, int textureId)
 {
-	entityType = NPC;
-	playerControlled = false;
-	hostile = false;
-	AIEnabled = true;
-	physicsEnabled = true;
-	collisionsEnabled = true;
-	staticObject = false;
-	entityName = "DefaultObject";
-
-	hasTarget = false;
-	targetObjectId = -1;
-	lifeTime = 0;
-
-	position = Vector3(0, 0, 0);
-	movementVector = Vector2(0, 0);
-	rotation = 0;
+	entityType = DRONE;
+	terrainType = UNDEFINED_TERRAIN;
 
 	this->meshId = meshId;
 	this->textureId = textureId;
+	physMeshId = 0;
 }
 
 void DemoGameObject::ConfigureDefaultPlayer(int meshId, int textureId)
 {
 	entityType = PLAYER;
+	terrainType = UNDEFINED_TERRAIN;
+
 	playerControlled = true;
-	hostile = false;
-	AIEnabled = false;
-	physicsEnabled = true;
-	collisionsEnabled = true;
-	staticObject = false;
-	entityName = "DefaultPlayer";
-
-	hasTarget = false;
-	targetObjectId = -1;
-	lifeTime = 0;
-
-	position = Vector3(0, 0, 0);
-	movementVector = Vector2(0, 0);
-	rotation = 0;
 
 	this->meshId = meshId;
 	this->textureId = textureId;
-}
-
-void DemoGameObject::ConfigureDefaultProjectile(int meshId, int textureId)
-{
-	entityType = PROJECTILE;
-	playerControlled = false;
-	hostile = false;
-	AIEnabled = true;
-	physicsEnabled = false;
-	collisionsEnabled = true;
-	staticObject = false;
-	entityName = "DefaultObject";
-
-	hasTarget = false;
-	targetObjectId = -1;
-	lifeTime = 0;
-
-	position = Vector3(0, 0, 0);
-	movementVector = Vector2(0, 0);
-	rotation = 0;
-
-	this->meshId = meshId;
-	this->textureId = textureId;
-}
-
-void DemoGameObject::ConfigureDefaultEffect(int meshId, int textureId)
-{
-	entityType = EFFECT;
-	playerControlled = false;
-	hostile = false;
-	AIEnabled = false;
-	physicsEnabled = false;
-	collisionsEnabled = false;
-	staticObject = false;
-	entityName = "DefaultEffect";
-
-	hasTarget = false;
-	targetObjectId = -1;
-	lifeTime = 0;
-
-	position = Vector3(0, 0, 0);
-	movementVector = Vector2(0, 0);
-	rotation = 0;
-
-	this->meshId = meshId;
-	this->textureId = textureId;
+	physMeshId = 0;
 }

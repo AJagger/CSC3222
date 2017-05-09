@@ -90,6 +90,9 @@
     <ClInclude Include="Game\CSC3222P1\stdafx.h">
       <Filter>Game\CSC3222P1</Filter>
     </ClInclude>
+    <ClInclude Include="Game\CSC3222P1\Vec3.h">
+      <Filter>Game\CSC3222P1</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

@@ -31,7 +31,7 @@ void DemoKeyInterpreter::ProcessKeyPresses(std::vector<int> keys, GameState &gam
 		DemoGameObject *returnedEntity = gameScene.gameObjects.TryToGetFirst();
 		if (returnedEntity != nullptr)	//Continue only if there is a returned item (i.e. don't try to do anything if there are no objects in the data structure)
 		{
-			if (returnedEntity->playerControlled)
+			if (returnedEntity->entityType == PLAYER)
 			{
 				controlledEntities.push_back(returnedEntity);
 			}
@@ -39,7 +39,7 @@ void DemoKeyInterpreter::ProcessKeyPresses(std::vector<int> keys, GameState &gam
 			while (gameScene.gameObjects.IsNext())
 			{
 				returnedEntity = gameScene.gameObjects.Next();
-				if (returnedEntity->playerControlled)
+				if (returnedEntity->entityType == PLAYER)
 				{
 					controlledEntities.push_back(returnedEntity);
 				}
@@ -63,15 +63,15 @@ void DemoKeyInterpreter::ProcessKeyPresses(std::vector<int> keys, GameState &gam
 					}
 				}
 
-				//Deal with setting orientation separately since it can be influenced by multiple keys being pressed at once
-				int orientation = DetermineOrientation(keys);
-				for (int i = 0; i < controlledEntities.size(); i++)
-				{
-					if (controlledEntities[i]->entityType == PLAYER)
-					{
-						controlledEntities[i]->rotation = orientation;
-					}
-				}
+				////Deal with setting orientation separately since it can be influenced by multiple keys being pressed at once
+				//int orientation = DetermineOrientation(keys);
+				//for (int i = 0; i < controlledEntities.size(); i++)
+				//{
+				//	if (controlledEntities[i]->entityType == PLAYER)
+				//	{
+				//		controlledEntities[i]->rotation = orientation;
+				//	}
+				//}
 			}
 
 			//Clear the controlled entities vector
@@ -112,7 +112,8 @@ void DemoKeyInterpreter::Player_Forward(GameScene & gamescene)
 	{
 		if (controlledEntities[i]->entityType == PLAYER)
 		{
-			controlledEntities[i]->movementVector.y = controlledEntities[i]->movementVector.y + 0.005f;
+			//controlledEntities[i]->movementVector.y = controlledEntities[i]->movementVector.y + 0.005f;
+			controlledEntities[i]->currentPhysState.actingForce.y = controlledEntities[i]->currentPhysState.actingForce.y + 0.05f;
 		}
 	}
 }
@@ -123,7 +124,8 @@ void DemoKeyInterpreter::Player_Backward(GameScene & gamescene)
 	{
 		if (controlledEntities[i]->entityType == PLAYER)
 		{
-			controlledEntities[i]->movementVector.y = controlledEntities[i]->movementVector.y - 0.005f;
+			//controlledEntities[i]->movementVector.y = controlledEntities[i]->movementVector.y - 0.005f;
+			controlledEntities[i]->currentPhysState.actingForce.y = controlledEntities[i]->currentPhysState.actingForce.y - 0.05f;
 		}
 	}
 }
@@ -134,7 +136,8 @@ void DemoKeyInterpreter::Player_Left(GameScene & gamescene)
 	{
 		if (controlledEntities[i]->entityType == PLAYER)
 		{
-			controlledEntities[i]->movementVector.x = controlledEntities[i]->movementVector.x + 0.005f;
+			//controlledEntities[i]->movementVector.x = controlledEntities[i]->movementVector.x + 0.005f;
+			controlledEntities[i]->currentPhysState.actingForce.x = controlledEntities[i]->currentPhysState.actingForce.x + 0.05f;
 		}
 	}
 }
@@ -145,7 +148,8 @@ void DemoKeyInterpreter::Player_Right(GameScene & gamescene)
 	{
 		if (controlledEntities[i]->entityType == PLAYER)
 		{
-			controlledEntities[i]->movementVector.x = controlledEntities[i]->movementVector.x - 0.005f;
+			//controlledEntities[i]->movementVector.x = controlledEntities[i]->movementVector.x - 0.005f;
+			controlledEntities[i]->currentPhysState.actingForce.x = controlledEntities[i]->currentPhysState.actingForce.x - 0.05f;
 		}
 	}
 }
