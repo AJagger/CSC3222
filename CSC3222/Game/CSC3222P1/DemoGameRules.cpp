@@ -1,13 +1,12 @@
-/* CSC3224 Code
+/* CSC3222 Code
 * Author: Aidan Jagger | 130281034
 * Class Description:
-* A very basic implementation of a class dealing with game-specific logic. For an actual game, the victory conditions would be a lot more complex but for the demo
-* the simple victory condition implemented is enough.
-* This class is called in the game loop and is intended to contain game logic in addition to the victory conditions in the game for coursework 2.
+* This class deals with removing entities (drones) from the game and terminating the game once criteria are met.
 */
 
 #include "stdafx.h"
 #include "DemoGameRules.h"
+#include "../CSC3222/Frameworks/DataArray.cpp"
 
 DemoGameRules::DemoGameRules()
 {
@@ -19,45 +18,78 @@ DemoGameRules::~DemoGameRules()
 
 void DemoGameRules::EnactGameRules(GameScene * gameScene, GameState * gameState)
 {
-	//For the demo project the only game specific rule to be checked and acted upon is whether the victory conditions have been met
-	if (CheckVictoryConditions(gameScene, gameState))
+	RemoveFinishedDrones(gameScene);
+	if(gameState->simulationStarted)
 	{
-		gameState->end = true;
+		gameState->end = DronesRemain(gameScene, gameState);
 	}
 }
 
-bool DemoGameRules::CheckVictoryConditions(GameScene * gameScene, GameState * gameState)
+void DemoGameRules::RemoveFinishedDrones(GameScene * gameScene)
 {
-	//Victory Conditions listed below:
-	Vector3 victoryPosition = Vector3(24, 12, 0);
-
-
-	bool victory = false;
-
-	//Search through scene entities looking for player controlled entities. Once found, check if their position to see if they have completed the level
-	DemoGameObject *returnedEntity = gameScene->gameObjects.TryToGetFirst();
-	if (returnedEntity != nullptr)	//Continue only if there is a returned item (i.e. don't try to do anything if there are no objects in the data structure)
+	//Cylce through objects
+	DemoGameObject *object = gameScene->gameObjects.TryToGetFirst();
+	if (object != nullptr)
 	{
-		if (returnedEntity->playerControlled)
+		//Check drones and remove if they have reached the end
+		if (object->entityType == DRONE && object->end)
 		{
-			if (returnedEntity->currentPhysState.position.x >= victoryPosition.x && returnedEntity->currentPhysState.position.y >= victoryPosition.y)
-			{
-				victory = true; //Player craft has reached the end of the demo maze!
-			}
+			int id = gameScene->gameObjects.GetId(*object);
+			gameScene->gameObjects.Free(id);
+			gameScene->physicsWorld.RemoveSpring(id);
 		}
 
 		while (gameScene->gameObjects.IsNext())
 		{
-			returnedEntity = gameScene->gameObjects.Next();
-			if (returnedEntity->playerControlled)
+			object = gameScene->gameObjects.Next();
+			if (object != nullptr)
 			{
-				if (returnedEntity->currentPhysState.position.x >= victoryPosition.x && returnedEntity->currentPhysState.position.y >= victoryPosition.y)
+				//Check drones and remove if they have reached the end
+				if (object->entityType == DRONE && object->end)
 				{
-					victory = true; //Player craft has reached the end of the demo maze!
+					int id = gameScene->gameObjects.GetId(*object);
+					gameScene->gameObjects.Free(id);
+					gameScene->physicsWorld.RemoveSpring(id);
+				}
+			}
+		}
+	}
+}
+
+bool DemoGameRules::DronesRemain(GameScene * gameScene, GameState * gameState)
+{
+	int droneCount = 0;
+
+	//Cylce through objects
+	DemoGameObject *object = gameScene->gameObjects.TryToGetFirst();
+	if (object != nullptr)
+	{
+		//Count drones
+		if (object->entityType == DRONE)
+		{
+			droneCount++;
+		}
+
+		while (gameScene->gameObjects.IsNext())
+		{
+			object = gameScene->gameObjects.Next();
+			if (object != nullptr)
+			{
+				//Count drones
+				if (object->entityType)
+				{
+					droneCount++;
 				}
 			}
 		}
 	}
 
-	return victory;
+	if(droneCount == 2)
+	{
+		return true;
+	}
+
+	return false;
 }
+
+

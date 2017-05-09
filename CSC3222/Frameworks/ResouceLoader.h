@@ -4,6 +4,12 @@
 * This class deals with loading data (textures/meshes/levels (scenes)/collision meshes) into the game engine from files stored in the game directories.
 */
 
+/* CSC3222 Code
+* Author: Aidan Jagger | 130281034
+* Class Description:
+* Addition of a method to read in tile data for creating the map.
+*/
+
 #pragma once
 #include "DataArray.h"
 //#include "gl/glew.h"

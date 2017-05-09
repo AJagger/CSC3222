@@ -1,8 +1,7 @@
-/* CSC3224 Code
+/* CSC3222 Code
 * Author: Aidan Jagger | 130281034
 * Class Description:
-* This class inherits from the base GameObject class and provides a few extra functions and variables for use in the game demo.
-* GameEntityType in particular is very useful for determining exactly what type of object it is.
+* This class inherits from the base GameObject class and provides a few extra functions and variables for use in the simulation
 */
 
 #pragma once
@@ -39,7 +38,6 @@ public:
 	GameEntityType entityType;
 	TerrainType terrainType;
 	bool playerControlled;
-	float velocityModifier;
 
 	void ConfigureDefaultMapTile(int meshId, int textureId = 0);
 	void ConfigureDefaultDrone(int meshId, int textureId = 0);

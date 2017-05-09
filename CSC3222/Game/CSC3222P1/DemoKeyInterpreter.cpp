@@ -10,6 +10,12 @@
 * an enum in the Keyboard class.
 */
 
+/* CSC3222 Code
+* Author: Aidan Jagger | 130281034
+* Class Description:
+* Added code to start simulation
+*/
+
 #include "stdafx.h"
 #include "DemoKeyInterpreter.h"
 #include "../../Frameworks/DataArray.cpp" //Temp fix to Linker Errors
@@ -46,8 +52,8 @@ void DemoKeyInterpreter::ProcessKeyPresses(std::vector<int> keys, GameState &gam
 			}
 
 			//If player controlled entities have been found, proceed to processing the keypresses
-			if (controlledEntities.size() > 0)
-			{
+			/*if (controlledEntities.size() > 0)
+			{*/
 				//Loop through keypresses and determine what function to perform
 				for (int i = 0; i < keys.size(); i++)
 				{
@@ -60,6 +66,7 @@ void DemoKeyInterpreter::ProcessKeyPresses(std::vector<int> keys, GameState &gam
 					case CONFIG_PLAYER_LEFT: Player_Left(gameScene); break;
 					case CONFIG_PLAYER_RIGHT: Player_Right(gameScene); break;
 					case CONFIG_DEBUG_TOGGLE: Debug_Toggle(gameState); break;
+					case CONFIG_START_SIMULATION: StartSim(gameState, gameScene); break;
 					}
 				}
 
@@ -72,7 +79,7 @@ void DemoKeyInterpreter::ProcessKeyPresses(std::vector<int> keys, GameState &gam
 				//		controlledEntities[i]->rotation = orientation;
 				//	}
 				//}
-			}
+			/*}*/
 
 			//Clear the controlled entities vector
 			controlledEntities.clear();
@@ -157,6 +164,16 @@ void DemoKeyInterpreter::Player_Right(GameScene & gamescene)
 void DemoKeyInterpreter::Debug_Toggle(GameState & gamestate)
 {
 	gamestate.renderer.ToggleBlendMode();
+}
+
+//CSC3222 code
+void DemoKeyInterpreter::StartSim(GameState & gamestate, GameScene & gamescene)
+{
+	if(!gamestate.simulationStarted)
+	{
+		gamescene.AddEntities();
+		gamestate.simulationStarted = true;
+	}
 }
 
 int DemoKeyInterpreter::DetermineOrientation(std::vector<int> keys)

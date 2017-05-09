@@ -8,6 +8,12 @@
 * 1920x1200 with a window name of "DemoGameEngine".
 */
 
+/* CSC3222 Code
+* Author: Aidan Jagger | 130281034
+* Class Description:
+* Addition of simulationStarted gamestate
+*/
+
 #pragma once
 #include "../Renderer/nclgl/Window.h"
 #include "../Renderer/nclglExpansion/Renderer.h"
@@ -21,6 +27,7 @@ public:
 	//States
 	bool paused;
 	bool end;
+	bool simulationStarted = false;
 
 	//Global Game Data
 	Window gameWindow = Window("DemoGameEngine", 1920, 1200, false);

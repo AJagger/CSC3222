@@ -79,6 +79,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <LibraryPath>$(SolutionDir)\CSC3222\Renderer\GLEW\lib\$(Configuration);$(SolutionDir)\CSC3222\Renderer\SOIL\$(Configuration);$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
+    <IncludePath>$(SolutionDir)\CSC3222\Renderer\GLEW\include;$(SolutionDir)\CSC3222\Renderer\SOIL;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -120,6 +122,9 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>../ncglExpansion/;../Renderer/GLEW/include/;../Renderer/ncgl/;../GLEW/include/;/Renderer/GLEW/include/;/Renderer/ncglExpansion/;/Renderer/nclgl/;%(AdditionalUsingDirectories)</AdditionalIncludeDirectories>
+      <AdditionalUsingDirectories>../ncglExpansion/;../Renderer/GLEW/include/;../Renderer/ncgl/;../GLEW/include/;/Renderer/GLEW/include/;/Renderer/ncglExpansion/;/Renderer/nclgl/;%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

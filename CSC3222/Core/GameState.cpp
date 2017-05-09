@@ -5,6 +5,12 @@
 * other engine functions to give them information required to perform their tasks.
 */
 
+/* CSC3222 Code
+* Author: Aidan Jagger | 130281034
+* Class Description:
+* Addition of simulationStarted gamestate
+*/
+
 #include "stdafx.h"
 #include "GameState.h"
 

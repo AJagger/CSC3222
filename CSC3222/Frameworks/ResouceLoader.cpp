@@ -4,6 +4,12 @@
 * This class deals with loading data (textures/meshes/levels (scenes)/collision meshes) into the game engine from files stored in the game directories.
 */
 
+/* CSC3222 Code
+* Author: Aidan Jagger | 130281034
+* Class Description:
+* Addition of a method to read in tile data for creating the map.
+*/
+
 #include "stdafx.h"
 #include "../Frameworks/DataArray.cpp" //Temp fix to Linker Errors
 #include "ResouceLoader.h"
@@ -125,6 +131,7 @@ bool ResourceLoader::LoadMeshes(DataArray<Mesh*> *meshes, const string & meshDir
 	return true;
 }
 
+//CSC3222 code
 bool ResourceLoader::LoadGridData(vector<char> *tiles, const string & levelDirPath)
 {
 	ifstream f(levelDirPath + "\\GridData.txt");

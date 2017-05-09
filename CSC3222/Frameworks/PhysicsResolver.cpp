@@ -1,8 +1,7 @@
-/* CSC3224 Code
+/* CSC3222 Code
 * Author: Aidan Jagger | 130281034
 * Class Description:
-* This class joins the physics engine Box2D to the rest of the engine. It allows for the creation and processing of game engine objects and data into
-* objects and data used by the physics engine and vica versa.
+* This class acts as the world - updating positions/velocities, storing spring information and calling collision detection systems
 */
 
 #include "stdafx.h"
@@ -44,6 +43,7 @@ void PhysicsResolver::SimulateWorld(DataArray<DemoGameObject> *gameObjects, floa
 
 	//Collision detection Goes here
 	Collision::CheckCollisions(gameObjects, &collisions);
+	Collision::DetectTerrain(gameObjects);
 
 	//Integrate velocity and position
 	DemoGameObject *object = gameObjects->TryToGetFirst();
@@ -51,7 +51,6 @@ void PhysicsResolver::SimulateWorld(DataArray<DemoGameObject> *gameObjects, floa
 	{
 		if(object->entityType == PLAYER || object->entityType == DRONE)
 		{
-			//object->previousPhysState = object->currentPhysState;
 			Integrate(object->currentPhysState, dt);
 			object->currentPhysState.actingForce = Vec3(0, 0, 0);
 		}
@@ -63,7 +62,6 @@ void PhysicsResolver::SimulateWorld(DataArray<DemoGameObject> *gameObjects, floa
 			{
 				if (object->entityType == PLAYER || object->entityType == DRONE)
 				{
-					//object->previousPhysState = object->currentPhysState;
 					Integrate(object->currentPhysState, dt);
 					object->currentPhysState.actingForce = Vec3(0, 0, 0);
 				}
@@ -87,10 +85,36 @@ void PhysicsResolver::AddSpring(DataArray<DemoGameObject>* gameObjects, int pare
 	}
 }
 
+void PhysicsResolver::RemoveSpring(int id)
+{
+	Spring *spring = springs.TryToGetFirst();
+	if (spring != nullptr)
+	{
+		if(spring->childId == id)
+		{
+			int springId = springs.GetId(*spring);
+			springs.Free(springId);
+		}
+
+		while (springs.IsNext())
+		{
+			spring = springs.Next();
+			if (spring != nullptr)
+			{
+				if (spring->childId == id)
+				{
+					int springId = springs.GetId(*spring);
+					springs.Free(springId);
+				}
+			}
+		}
+	}
+}
+
 //Semi-Implicit Euler Integration
 void PhysicsResolver::Integrate(State &state, float dt)
 {
-	float maxVelocity = 0.5;
+	float maxVelocity = 0.5 * state.velocityModifier;
 	state.velocity = state.velocity + (Acceleration(state) * dt);
 	if(state.velocity.MagnitudeXY() > maxVelocity)
 	{
@@ -131,39 +155,3 @@ Vec3 PhysicsResolver::DetermineSpringForce(DemoGameObject * parentObject, DemoGa
 	//F = -k(|x|-d)(x/|x|) - bv
 	return -k*(distance - springRestingLength)*(x.normalise()) - b*v;
 }
-
-//void PhysicsResolver::CheckSprings(DataArray<DemoGameObject>* gameObjects)
-//{
-//	int playerId = -1;
-//	DemoGameObject* player = nullptr;
-//
-//	//Find player object
-//	DemoGameObject *object = gameObjects->TryToGetFirst();
-//	if (object != nullptr)
-//	{
-//		if (object->entityType == PLAYER)
-//		{
-//			playerId = gameObjects->GetId(*object);
-//			player = object;
-//		}
-//
-//		while (gameObjects->IsNext() && playerId == -1)
-//		{
-//			object = gameObjects->Next();
-//			if (object != nullptr)
-//			{
-//				if (object->entityType == PLAYER)
-//				{
-//					playerId = gameObjects->GetId(*object);
-//					player = object;
-//				}
-//			}
-//		}
-//	}
-//
-//	//If there is a player object
-//	if(playerId != -1 && object != nullptr)
-//	{
-//		
-//	}
-//}

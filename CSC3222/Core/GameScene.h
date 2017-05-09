@@ -6,6 +6,12 @@
 * and provide them with the level and game data needed.
 */
 
+/* CSC3222 Code
+* Author: Aidan Jagger | 130281034
+* Class Description:
+* This class has been pretty much entirely rewritten to add functions related to add functionality required for CSC3222 coursework P1.
+*/
+
 #pragma once
 #include "GameObject.h"
 #include "../Frameworks/DataArray.h"
@@ -25,5 +31,6 @@ public:
 	PhysicsResolver physicsWorld;
 
 	void LoadLevel();
+	void AddEntities();
 
 };

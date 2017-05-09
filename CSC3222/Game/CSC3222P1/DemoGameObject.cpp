@@ -1,8 +1,7 @@
-/* CSC3224 Code
+/* CSC3222 Code
 * Author: Aidan Jagger | 130281034
 * Class Description:
-* This class inherits from the base GameObject class and provides a few extra functions and variables for use in the game demo.
-* GameEntityType in particular is very useful for determining exactly what type of object it is.
+* This class inherits from the base GameObject class and provides a few extra functions and variables for use in the simulation
 */
 
 #include "stdafx.h"
@@ -16,8 +15,7 @@ DemoGameObject::DemoGameObject()
 	currentPhysState.velocity = Vec3(0, 0, 0);
 	currentPhysState.actingForce = Vec3(0, 0, 0);
 	currentPhysState.mass = 1;
-
-	velocityModifier = 1.0;
+	currentPhysState.velocityModifier = 1.0;
 	playerControlled = false;
 
 	meshId = 0;

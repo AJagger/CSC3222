@@ -5,6 +5,12 @@
 * Has a default tick rate of 60 ticks per second.
 */
 
+/* CSC3222 Code
+* Author: Aidan Jagger | 130281034
+* Class Description:
+* Minor changes to suit the purposes of this coursework
+*/
+
 #include "stdafx.h"
 #include "GameLoop.h"
 #include "../Game/CSC3222P1/DemoKeyInterpreter.h"
@@ -52,11 +58,9 @@ void GameLoop::RunLoop()
 			//Process Inputs
 			keyInterp.ProcessKeyPresses(input, *state, *scene);
 			//Process GameRules
-			//DemoGameRules::EnactGameRules(scene, state);
+			DemoGameRules::EnactGameRules(scene, state);
 			//UpdatePositions (collision detection & resolution happens here)
-			//PhysicsResolver::SimulateActions(&scene->gameObjects);
 			scene->physicsWorld.SimulateWorld(&scene->gameObjects, dt);
-			//TempPositionUpdater();
 			//RenderScene
 			renderer.RenderObjects(scene, state);
 		}

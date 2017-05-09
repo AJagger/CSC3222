@@ -1,3 +1,9 @@
+/* CSC3222 Code
+* Author: Aidan Jagger | 130281034
+* Class Description:
+* Detects and resolved Collisions. Also has methods for checking the terrain that an object is on.
+*/
+
 #include "stdafx.h"
 #include "Collision.h"
 #include <cmath>
@@ -96,6 +102,118 @@ void Collision::IndividualCheck(DataArray<DemoGameObject>* gameObjects, DataArra
 							//This prevents objects from tunneling between wall blocks
 							ResolveCollisionWall(object, initialObject, overlapDistance, wallcollisions != 0);
 							wallcollisions++;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+void Collision::DetectTerrain(DataArray<DemoGameObject>* gameObjects)
+{
+	//Cylce through objects
+	DemoGameObject *object = gameObjects->TryToGetFirst();
+	if (object != nullptr)
+	{
+		//Only perform checks on objects that can move
+		if (object->entityType == PLAYER || object->entityType == DRONE)
+		{
+			CheckTerrain(gameObjects, object);
+
+			//Due to the way DataArray works, to get the next element after iterating through from the start in IndividualCheck()
+			//we need to request the gameObject from the dataArray so that the internal counter is reset to this position.
+			int checkedId = gameObjects->GetId(*object);
+			object = gameObjects->TryToGet(checkedId);
+		}
+
+		while (gameObjects->IsNext())
+		{
+			object = gameObjects->Next();
+			if (object != nullptr)
+			{
+				//Only perform checks on objects that can move
+				if (object->entityType == PLAYER || object->entityType == DRONE)
+				{
+					CheckTerrain(gameObjects, object);
+
+					//Due to the way DataArray works, to get the next element after iterating through from the start in IndividualCheck()
+					//we need to request the gameObject from the dataArray so that the internal counter is reset to this position.
+					int checkedId = gameObjects->GetId(*object);
+					object = gameObjects->TryToGet(checkedId);
+				}
+			}
+		}
+	}
+}
+
+void Collision::CheckTerrain(DataArray<DemoGameObject>* gameObjects, DemoGameObject * initialObject)
+{
+	//Cylce through objects
+	DemoGameObject *object = gameObjects->TryToGetFirst();
+	bool found = false;
+
+	if (object != nullptr)
+	{
+		//Only perform checks on Tiles.
+		if (object != initialObject) {
+			if(object->entityType == MAP_TILE)
+			{
+				//if object is within a certain boundary
+				if(-3 >(initialObject->currentPhysState.position - object->currentPhysState.position).MagnitudeXY() < 3)
+				{
+					//Determing if object is within the square
+					float squareFarLeft = object->currentPhysState.position.x - (object->currentPhysState.radius);
+					float squareFarRight = object->currentPhysState.position.x + (object->currentPhysState.radius);
+					float squareTop = object->currentPhysState.position.y + (object->currentPhysState.radius);
+					float squareBottom = object->currentPhysState.position.y - (object->currentPhysState.radius);
+
+
+					if (initialObject->currentPhysState.position.x >= squareFarLeft && initialObject->currentPhysState.position.x <= squareFarRight 
+						&& initialObject->currentPhysState.position.y >= squareBottom && initialObject->currentPhysState.position.y <= squareTop)
+					{
+						//initial object is within this object
+						initialObject->currentPhysState.velocityModifier = object->currentPhysState.velocityModifier;
+						if(object->terrainType == INSIDE_CASTLE)
+						{
+							initialObject->end = true;
+						}
+						found = true;
+					}					
+				}
+			}
+		}
+
+		while (gameObjects->IsNext() && !found)
+		{
+			object = gameObjects->Next();
+			if (object != nullptr)
+			{
+				//Only perform checks on Tiles.
+				if (object != initialObject) {
+					if (object->entityType == MAP_TILE)
+					{
+						//if object is within a certain boundary
+						if (-3 >(initialObject->currentPhysState.position - object->currentPhysState.position).MagnitudeXY() < 3)
+						{
+							//Determing if object is within the square
+							float squareFarLeft = object->currentPhysState.position.x - (object->currentPhysState.radius);
+							float squareFarRight = object->currentPhysState.position.x + (object->currentPhysState.radius);
+							float squareTop = object->currentPhysState.position.y + (object->currentPhysState.radius);
+							float squareBottom = object->currentPhysState.position.y - (object->currentPhysState.radius);
+
+
+							if (initialObject->currentPhysState.position.x >= squareFarLeft && initialObject->currentPhysState.position.x <= squareFarRight
+								&& initialObject->currentPhysState.position.y >= squareBottom && initialObject->currentPhysState.position.y <= squareTop)
+							{
+								//initial object is within this object
+								initialObject->currentPhysState.velocityModifier = object->currentPhysState.velocityModifier;
+								if (object->terrainType == INSIDE_CASTLE)
+								{
+									initialObject->end = true;
+								}
+								found = true;
+							}
 						}
 					}
 				}

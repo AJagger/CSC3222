@@ -1,9 +1,7 @@
-/* CSC3224 Code
+/* CSC3222 Code
 * Author: Aidan Jagger | 130281034
 * Class Description:
-* A very basic implementation of a class dealing with game-specific logic. For an actual game, the victory conditions would be a lot more complex but for the demo
-* the simple victory condition implemented is enough.
-* This class is called in the game loop and is intended to contain game logic in addition to the victory conditions in the game for coursework 2.
+* This class deals with removing entities (drones) from the game and terminating the game once criteria are met.
 */
 
 #pragma once
@@ -19,5 +17,6 @@ public:
 	static void EnactGameRules(GameScene *gameScene, GameState *gameState);
 
 private:
-	static bool CheckVictoryConditions(GameScene *gameScene, GameState *gameState);
+	static void RemoveFinishedDrones(GameScene *gameScene);
+	static bool DronesRemain(GameScene *gameScene, GameState *gameState);
 };

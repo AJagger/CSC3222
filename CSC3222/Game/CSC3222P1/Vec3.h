@@ -1,3 +1,9 @@
+/* CSC3222 Code
+* Author: Aidan Jagger | 130281034
+* Class Description:
+* Implementation of a Vector3 class with some adjustments to allow 2D use (z is still used but is used for rendering purposes)
+*/
+
 #pragma once
 #include <cmath>
 
@@ -52,16 +58,6 @@ public:
 	{ 
 		return (comparison.x == x && comparison.y == y && comparison.z == z) ? false : true;
 	}
-
-	//Vec3 operator*(const float value) const
-	//{
-	//	return Vec3(x * value, y * value, z * value);
-	//}
-
-	//friend Vec3 operator*(const Vec3 &toMultiply, float value)
-	//{
-	//	return Vec3(toMultiply.x * value, toMultiply.y * value, toMultiply.z * value);
-	//}
 
 	friend inline Vec3 operator*(const Vec3 &toMultiply, float value);
 	friend inline Vec3 operator*(float value, const Vec3 &toMultiply);

@@ -7,6 +7,12 @@
 
 #pragma once
 #include "../Game/CSC3222P1/DemoGameObject.h"
+/* CSC3222 Code
+* Author: Aidan Jagger | 130281034
+* Class Description:
+* This class acts as the world - updating positions/velocities, storing spring information and calling collision detection systems
+*/
+
 #include "DataArray.h"
 #include "../Game/CSC3222P1/Vec3.h"
 #include "Collision.h"
@@ -26,6 +32,7 @@ public:
 
 	void SimulateWorld(DataArray<DemoGameObject> *gameObjects, float dt);
 	void AddSpring(DataArray<DemoGameObject> *gameObjects, int parentId, int childId);
+	void RemoveSpring(int id);
 
 private:
 	DataArray<Spring> springs = DataArray<Spring>();

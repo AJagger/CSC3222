@@ -6,6 +6,12 @@
 * and provide them with the level and game data needed.
 */
 
+/* CSC3222 Code
+* Author: Aidan Jagger | 130281034
+* Class Description:
+* This class has been pretty much entirely rewritten to add functions related to add functionality required for CSC3222 coursework P1.
+*/
+
 #include "stdafx.h"
 #include "GameScene.h"
 #include "../Frameworks/DataArray.cpp" //Temp fix to Linker Error
@@ -55,52 +61,85 @@ void GameScene::LoadLevel()
 			//Set the Tile type:
 			switch(tiles.at(gridNumber))
 			{
-			case 'O': addObject->terrainType = OPEN_TERRAIN; addObject->textureId = 4; break;
-				case 'B': addObject->terrainType = BASE_CAMP; addObject->textureId = 11; break;
-				case 'C': addObject->terrainType = COVERED_TERRAIN; addObject->textureId = 5; break;
-				case 'F': addObject->terrainType = FOREST; addObject->textureId = 6; break;
-				case 'R': addObject->terrainType = RIVER; addObject->textureId = 7; break;
-				case 'G': addObject->terrainType = GATE; addObject->textureId = 10; break;
-				case 'W': addObject->terrainType = WALL; addObject->textureId = 8; break;
-				case 'A': addObject->terrainType = INSIDE_CASTLE; addObject->textureId = 9; break;
+			case 'O': addObject->terrainType = OPEN_TERRAIN; addObject->textureId = 4; addObject->currentPhysState.velocityModifier = 1.0f; break;
+				case 'B': addObject->terrainType = BASE_CAMP; addObject->textureId = 11; addObject->currentPhysState.velocityModifier = 1.0f; break;
+				case 'C': addObject->terrainType = COVERED_TERRAIN; addObject->textureId = 5; addObject->currentPhysState.velocityModifier = 1.0f; break;
+				case 'F': addObject->terrainType = FOREST; addObject->textureId = 6; addObject->currentPhysState.velocityModifier = 0.5f; break;
+				case 'R': addObject->terrainType = RIVER; addObject->textureId = 7; addObject->currentPhysState.velocityModifier = 0.35f; break;
+				case 'G': addObject->terrainType = GATE; addObject->textureId = 10; addObject->currentPhysState.velocityModifier = 0.15f; break;
+				case 'W': addObject->terrainType = WALL; addObject->textureId = 8; addObject->currentPhysState.velocityModifier = 1.0f; break;
+				case 'A': addObject->terrainType = INSIDE_CASTLE; addObject->textureId = 9; addObject->currentPhysState.velocityModifier = 1.0f; break;
 			}
 			gridNumber++;
 		}
 	}
+}
 
-	vector<DemoGameObject*> createdDrones = vector<DemoGameObject*>();
-	for(int i = 0; i < 9 ;i++)
+void GameScene::AddEntities()
+{
+	//Select random base square
+	srand(time(NULL));
+	int chosenBase = rand() % 18;
+	int currentBase = 0;
+	Vec3 basePosition = Vec3(0, 0, 0);
+	bool found = false;
+
+	//Cylce through objects
+	DemoGameObject *object = gameObjects.TryToGetFirst();
+	if (object != nullptr)
 	{
-		//Add drone for testing
+		//If object is a base tile
+		if (object->terrainType == BASE_CAMP)
+		{
+			if(currentBase == chosenBase)
+			{
+				basePosition = object->currentPhysState.position;
+				found = true;
+			}
+			currentBase++;
+		}
+
+		while (gameObjects.IsNext() && !found)
+		{
+			object = gameObjects.Next();
+			if (object != nullptr)
+			{
+				//If object is a base tile
+				if (object->terrainType == BASE_CAMP)
+				{
+					if (currentBase == chosenBase)
+					{
+						basePosition = object->currentPhysState.position;
+						found = true;
+					}
+					currentBase++;
+				}
+			}
+		}
+	}
+
+
+	DemoGameObject *addObject = gameObjects.CreateNew();
+	vector<DemoGameObject*> createdDrones = vector<DemoGameObject*>();
+	for (int i = 0; i < 9; i++)
+	{
+		//Add drone
 		addObject = gameObjects.CreateNew();
 		addObject->ConfigureDefaultDrone(1, 1);
-		addObject->currentPhysState.position = Vec3(0.5*(i + 1), 0.5*(i + 1), 0.05*(i+1));
+		//addObject->currentPhysState.position = Vec3(0.5*(i + 1), 0.5*(i + 1), 0.05*(i + 1));
+		addObject->currentPhysState.position = Vec3(basePosition.x, basePosition.y, 0.05*(i + 1));
 		addObject->currentPhysState.radius = 0.2;
 
 		createdDrones.push_back(addObject);
 	}
-	////Add drone for testing
-	//addObject = gameObjects.CreateNew();
-	//addObject->ConfigureDefaultDrone(1, 1);
-	//addObject->currentPhysState.position = Vec3(1, 3, 0.9);
-	//addObject->currentPhysState.radius = 0.2;
 
-	//Add player for testing
+	//Add player
 	DemoGameObject *playerObject = gameObjects.CreateNew();
 	playerObject->ConfigureDefaultPlayer(1, 2);
-	playerObject->currentPhysState.position = Vec3(1, 1, 1);
+	playerObject->currentPhysState.position = Vec3(basePosition.x, basePosition.y, 1);
 	playerObject->currentPhysState.radius = 0.2;
 
-	//physicsWorld.AddSpring(&gameObjects, gameObjects.GetId(*playerObject), gameObjects.GetId(*addObject));
-
-	////Add drone for testing
-	//addObject = gameObjects.CreateNew();
-	//addObject->ConfigureDefaultDrone(1, 1);
-	//addObject->currentPhysState.position = Vec3(2, 1, 0.9);
-	//addObject->currentPhysState.radius = 0.2;
-
-	//physicsWorld.AddSpring(&gameObjects, gameObjects.GetId(*playerObject), gameObjects.GetId(*addObject));
-
+	//Add springs
 	for (int i = 0; i < 9; i++)
 	{
 		physicsWorld.AddSpring(&gameObjects, gameObjects.GetId(*playerObject), gameObjects.GetId(*createdDrones.at(i)));

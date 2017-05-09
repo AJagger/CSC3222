@@ -10,6 +10,12 @@
 * an enum in the Keyboard class.
 */
 
+/* CSC3222 Code
+* Author: Aidan Jagger | 130281034
+* Class Description:
+* This class deals with removing entities (drones) from the game and terminating the game once criteria are met.
+*/
+
 #pragma once
 #include "../../Frameworks/KeyInterpreter.h"
 #include "../../Frameworks/DataArray.h"
@@ -35,7 +41,8 @@ private:
 		CONFIG_PLAYER_LEFT = KEYBOARD_D,
 		CONFIG_PLAYER_RIGHT = KEYBOARD_A,
 		CONFIG_FORCE_END = KEYBOARD_C,
-		CONFIG_DEBUG_TOGGLE = KEYBOARD_L
+		CONFIG_DEBUG_TOGGLE = KEYBOARD_L,
+		CONFIG_START_SIMULATION = KEYBOARD_K
 	};
 
 	void Force_End(GameState &gamestate);
@@ -45,6 +52,7 @@ private:
 	void Player_Left(GameScene &gamescene);
 	void Player_Right(GameScene &gamescene);
 	void Debug_Toggle(GameState &gamestate);
+	void StartSim(GameState &gamestate, GameScene &gamescene);
 	int DetermineOrientation(std::vector<int> keys);
 
 	vector<DemoGameObject*> controlledEntities;

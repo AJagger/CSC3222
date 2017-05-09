@@ -5,6 +5,12 @@
 * used with more specific variables.
 */
 
+/* CSC3222 Code
+* Author: Aidan Jagger | 130281034
+* Class Description:
+* Additions of a lot of physics-related data for use in the PhysicsResolver class.
+*/
+
 #pragma once
 #include <string>
 #include "../Renderer/nclgl/Vector2.h"
@@ -24,6 +30,7 @@ struct State
 	Vec3 velocity;
 	float mass;
 	Vec3 actingForce;
+	float velocityModifier;
 
 	//Collision Data
 	CollisionObject collisionObject;
@@ -35,13 +42,9 @@ class GameObject
 public:
 	GameObject();
 	~GameObject();
-	
-	//Vector3 position;
-	//Vector2 movementVector;
-	//float rotation;
 
-	State previousPhysState;
 	State currentPhysState;
+	bool end = false;
 
 	int meshId;
 	int textureId;
