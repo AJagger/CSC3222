@@ -17,6 +17,7 @@
 #include "../Frameworks/Draw.h"
 #include <ctime>
 #include "../Game/CSC3222P1/DemoGameRules.h"
+#include "../Game/CSC3222P2/AStar.h"
 
 GameLoop::GameLoop(GameState *gameState, GameScene *gameScene)
 {
@@ -41,6 +42,10 @@ void GameLoop::RunLoop()
 	Draw renderer = Draw();
 
 	lastTick = clock();
+
+	AStar aStar = AStar();
+	aStar.PerformAStar();
+	aStar.PrintSolution();
 
 	//Main loop
 	while(!state->end && state->gameWindow.UpdateWindow())
