@@ -49,7 +49,7 @@ void PhysicsResolver::SimulateWorld(DataArray<DemoGameObject> *gameObjects, floa
 	DemoGameObject *object = gameObjects->TryToGetFirst();
 	if (object != nullptr)
 	{
-		if(object->entityType == PLAYER || object->entityType == DRONE)
+		if(object->entityType == PLAYER || object->entityType == DRONE || object->entityType == AI)
 		{
 			Integrate(object->currentPhysState, dt);
 			object->currentPhysState.actingForce = Vec3(0, 0, 0);
@@ -60,7 +60,7 @@ void PhysicsResolver::SimulateWorld(DataArray<DemoGameObject> *gameObjects, floa
 			object = gameObjects->Next();
 			if (object != nullptr)
 			{
-				if (object->entityType == PLAYER || object->entityType == DRONE)
+				if (object->entityType == PLAYER || object->entityType == DRONE || object->entityType == AI)
 				{
 					Integrate(object->currentPhysState, dt);
 					object->currentPhysState.actingForce = Vec3(0, 0, 0);

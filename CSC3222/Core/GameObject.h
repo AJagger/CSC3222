@@ -16,6 +16,7 @@
 #include "../Renderer/nclgl/Vector2.h"
 #include "../Renderer/nclgl/Vector3.h"
 #include "../Game/CSC3222P1/Vec3.h"
+#include "../Game/CSC3222P2/AStar.h"
 
 struct State
 {
@@ -37,6 +38,14 @@ struct State
 	float radius;
 };
 
+struct AIData
+{
+	GridCoordinates origin;
+	GridCoordinates destination;
+	std::vector<GridCoordinates> *calculatedPath;
+	int currentTargetLocation = 0;
+};
+
 class GameObject
 {
 public:
@@ -44,6 +53,7 @@ public:
 	~GameObject();
 
 	State currentPhysState;
+	AIData aiData;
 	bool end = false;
 
 	int meshId;

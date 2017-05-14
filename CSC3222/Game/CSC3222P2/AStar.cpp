@@ -41,7 +41,7 @@ AStar::AStar()
 		}
 	}
 
-	//Set start and end ids
+	//Set default start and end ids
 	startId = 1;
 	endId = 387;
 
@@ -51,10 +51,9 @@ AStar::AStar()
 
 AStar::~AStar()
 {
-	delete[] nodes;
 }
 
-void AStar::PerformAStar()
+vector<GridCoordinates>* AStar::PerformAStar()
 {
 	bool reachedEnd = false;
 	bool solved = false;
@@ -63,117 +62,120 @@ void AStar::PerformAStar()
 	nodes[startLocation.y][startLocation.x].g = 0;
 	nodes[startLocation.y][startLocation.x].h = H(startLocation, endLocation);
 	nodes[startLocation.y][startLocation.x].f = nodes[startLocation.y][startLocation.x].g + nodes[startLocation.y][startLocation.x].h;
-	openList.push(&nodes[startLocation.y][startLocation.x]);
+	openList.push(nodes[startLocation.y][startLocation.x]);
 	openListIds.push_back(nodes[startLocation.y][startLocation.x].nodeId);
 
 	while(!reachedEnd)
 	{
-		AStarNode *p = openList.top();
+		//Check to see that the list is not empty. If it is, solution cannot be solved.
+		if (openList.size() != 0)
+		{
+			AStarNode p = openList.top();
 
-		//If p is null, no solution can be found
-		if(p == nullptr)
-		{
-			//end with no solution
-			reachedEnd = true;
-		}
-		//Check to see if p is the end node
-		else if(p->nodeId == endId)
-		{
-			closedList.push_back(p);
-			openList.pop();
-			DeleteOpenListIds(p->nodeId);
-			reachedEnd = true;
-			solved = true;
-		}
-		//Add p to closed list and remove from open list
-		else
-		{
-			closedList.push_back(p);
-			openList.pop();
-			DeleteOpenListIds(p->nodeId);
-
-			for (int i = 0; i < 8; i++)
+			//Check to see if p is the end node
+			if (p.nodeId == endId)
 			{
-				GridCoordinates coodinateChangeQ = GridCoordinates(0, 0);
+				closedList.push_back(p);
+				openList.pop();
+				DeleteOpenListIds(p.nodeId);
+				reachedEnd = true;
+				solved = true;
+			}
+			//Add p to closed list and remove from open list
+			else
+			{
+				closedList.push_back(p);
+				openList.pop();
+				DeleteOpenListIds(p.nodeId);
 
-				switch (i)
+				for (int i = 0; i < 8; i++)
 				{
-				case 0: coodinateChangeQ = GridCoordinates(0, 1); break;
-				case 1: coodinateChangeQ = GridCoordinates(1, 1); break;
-				case 2: coodinateChangeQ = GridCoordinates(1, 0); break;
-				case 3: coodinateChangeQ = GridCoordinates(1, -1); break;
-				case 4: coodinateChangeQ = GridCoordinates(0, -1); break;
-				case 5: coodinateChangeQ = GridCoordinates(-1, -1); break;
-				case 6: coodinateChangeQ = GridCoordinates(-1, 0); break;
-				case 7: coodinateChangeQ = GridCoordinates(-1, 1); break;
-				}
+					GridCoordinates coodinateChangeQ = GridCoordinates(0, 0);
 
-				//Check that the grid cell exists and can be moved through
-				int updatedX = p->location.x + coodinateChangeQ.x;
-				int updatedY = p->location.y + coodinateChangeQ.y;
-
-
-				//TOFIX: issue with updatedY being allowed to be 20.
-				if ((0 <= updatedX < GRID_SIZE) && (0 <= updatedY < GRID_SIZE) && nodes[updatedY][updatedX].passable)
-				{
-					//Temp AStarNode q
-					AStarNode q;
-					q.nodeId = nodes[updatedY][updatedX].nodeId;
-					q.g = G(p->g, coodinateChangeQ);
-					q.h = H(nodes[updatedY][updatedX].location, endLocation);
-					q.f = nodes[updatedY][updatedX].g + nodes[updatedY][updatedX].h;
-
-					//Check to see if q is in the openList
-					bool inOpenList = false;
-					bool inClosedList = false;
-					for (int ol = 0; ol < openListIds.size(); ol++)
+					switch (i)
 					{
-						if (openListIds.at(ol) == q.nodeId)
-						{
-							inOpenList = true;
-							break;
-						}
+					case 0: coodinateChangeQ = GridCoordinates(0, 1); break;
+					case 1: coodinateChangeQ = GridCoordinates(1, 1); break;
+					case 2: coodinateChangeQ = GridCoordinates(1, 0); break;
+					case 3: coodinateChangeQ = GridCoordinates(1, -1); break;
+					case 4: coodinateChangeQ = GridCoordinates(0, -1); break;
+					case 5: coodinateChangeQ = GridCoordinates(-1, -1); break;
+					case 6: coodinateChangeQ = GridCoordinates(-1, 0); break;
+					case 7: coodinateChangeQ = GridCoordinates(-1, 1); break;
 					}
 
-					for (int cl = 0; cl < closedList.size(); cl++)
-					{
-						if (closedList.at(cl)->nodeId == q.nodeId)
-						{
-							inClosedList = true;
-							break;
-						}
-					}
+					//Check that the grid cell exists and can be moved through
+					int updatedX = p.location.x + coodinateChangeQ.x;
+					int updatedY = p.location.y + coodinateChangeQ.y;
 
-					if (inOpenList || inClosedList)
+
+					//TOFIX: issue with updatedY being allowed to be 20.
+					if(updatedX >= 0 && updatedX < GRID_SIZE && updatedY >= 0 && updatedY < GRID_SIZE && nodes[updatedY][updatedX].passable)
 					{
-						//If more efficient, update. Else do nothing
-						if (q.g < nodes[updatedY][updatedX].g)
+						//Temp AStarNode q
+						AStarNode q;
+						q.nodeId = nodes[updatedY][updatedX].nodeId;
+						q.g = G(p.g, coodinateChangeQ);
+						q.h = H(nodes[updatedY][updatedX].location, endLocation);
+						q.f = nodes[updatedY][updatedX].g + nodes[updatedY][updatedX].h;
+
+						//Check to see if q is in the openList
+						bool inOpenList = false;
+						bool inClosedList = false;
+						for (int ol = 0; ol < openListIds.size(); ol++)
+						{
+							if (openListIds.at(ol) == q.nodeId)
+							{
+								inOpenList = true;
+								break;
+							}
+						}
+
+						for (int cl = 0; cl < closedList.size(); cl++)
+						{
+							if (closedList.at(cl).nodeId == q.nodeId)
+							{
+								inClosedList = true;
+								break;
+							}
+						}
+
+						if (inOpenList || inClosedList)
+						{
+							//If more efficient, update. Else do nothing
+							if (q.g < nodes[updatedY][updatedX].g)
+							{
+								nodes[updatedY][updatedX].g = q.g;
+								nodes[updatedY][updatedX].h = q.h;
+								nodes[updatedY][updatedX].f = q.f;
+								nodes[updatedY][updatedX].parentId = p.nodeId;
+							}
+						}
+						//If not, add to open list
+						else
 						{
 							nodes[updatedY][updatedX].g = q.g;
 							nodes[updatedY][updatedX].h = q.h;
 							nodes[updatedY][updatedX].f = q.f;
-							nodes[updatedY][updatedX].parentId = p->nodeId;
+							nodes[updatedY][updatedX].parentId = p.nodeId;
+							openList.push(nodes[updatedY][updatedX]);
+							openListIds.push_back(nodes[updatedY][updatedX].nodeId);
 						}
-					}
-					//If not, add to open list
-					else
-					{
-						nodes[updatedY][updatedX].g = q.g;
-						nodes[updatedY][updatedX].h = q.h;
-						nodes[updatedY][updatedX].f = q.f;
-						nodes[updatedY][updatedX].parentId = p->nodeId;
-						openList.push(&nodes[updatedY][updatedX]);
-						openListIds.push_back(nodes[updatedY][updatedX].nodeId);
 					}
 				}
 			}
 		}
-
+		//If no solution, end simulation
+		else
+		{
+			reachedEnd = true;
+		}
 	}
 
 	//Solution found! (or not)
 	if(solved)
 	{
+		vector<GridCoordinates> *returnSolution = new vector<GridCoordinates>();
 
 		int id = endId;
 
@@ -184,18 +186,48 @@ void AStar::PerformAStar()
 			{
 				GridCoordinates coords = FindNode(id);
 				solution.push_back(coords);
+				returnSolution->push_back(coords);
 				reachedStart = true;
 			}
 			else
 			{
 				GridCoordinates coords = FindNode(id);
 				solution.push_back(coords);
+				returnSolution->push_back(coords);
 				id = nodes[coords.y][coords.x].parentId;
 			}
 		}
 
 		std::reverse(solution.begin(), solution.end());
+		std::reverse(returnSolution->begin(), returnSolution->end());
+
+		//Clear lists
+		openList.empty();
+		closedList.empty();
+		openListIds.empty();
+
+		return returnSolution;
 	}
+	else
+	{
+		//Clear lists
+		openList.empty();
+		closedList.empty();
+		openListIds.empty();
+
+		return nullptr;
+	}
+}
+
+vector<GridCoordinates>* AStar::CalculateAStarPath(GridCoordinates start, GridCoordinates end)
+{
+	//Setup
+	startLocation = start;
+	endLocation = end;
+	startId = nodes[start.y][start.x].nodeId;
+	endId = nodes[end.y][end.x].nodeId;
+
+	return PerformAStar();
 }
 
 int AStar::H(GridCoordinates start, GridCoordinates end)

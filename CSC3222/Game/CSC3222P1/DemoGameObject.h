@@ -13,7 +13,8 @@ enum GameEntityType
 	MAP_TILE = 0,
 	DRONE = 1,
 	PLAYER = 2,
-	UNINITIALISED = 3
+	AI = 3,
+	UNINITIALISED = 4
 };
 
 enum TerrainType
@@ -29,6 +30,11 @@ enum TerrainType
 	INSIDE_CASTLE = 8
 };
 
+enum AIType
+{
+	JENKINS_LEADER = 0
+};
+
 class DemoGameObject : public GameObject
 {
 public:
@@ -37,6 +43,7 @@ public:
 
 	GameEntityType entityType;
 	TerrainType terrainType;
+	AIType aiType;
 	bool playerControlled;
 
 	void ConfigureDefaultMapTile(int meshId, int textureId = 0);

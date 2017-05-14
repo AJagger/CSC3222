@@ -31,10 +31,10 @@ struct AStarNode
 	}
 };
 
-struct CompareAStarNodePointers {
-	bool operator()(AStarNode const * n1, AStarNode const * n2) {
+struct CompareAStarNode {
+	bool operator()(AStarNode const  &n1, AStarNode const  &n2) {
 		// return "true" if "p1" is ordered before "p2", for example:
-		return n1->f < n2->f;
+		return n1.f < n2.f;
 	}
 };
 
@@ -44,7 +44,8 @@ public:
 	AStar();
 	~AStar();
 
-	void PerformAStar();
+	std::vector<GridCoordinates>* PerformAStar();
+	std::vector<GridCoordinates>* CalculateAStarPath(GridCoordinates start, GridCoordinates end);
 	int H(GridCoordinates start, GridCoordinates end);
 	int G(int previousG, GridCoordinates directionVector);
 	GridCoordinates FindNode(int id);
@@ -52,9 +53,9 @@ public:
 
 	static const int GRID_SIZE = 20;
 	AStarNode nodes[GRID_SIZE][GRID_SIZE] = {};
-	std::priority_queue<AStarNode*, std::vector<AStarNode*>, CompareAStarNodePointers> openList;
+	std::priority_queue<AStarNode, std::vector<AStarNode>, CompareAStarNode> openList;
 	std::vector<int> openListIds;
-	std::vector<AStarNode*> closedList;
+	std::vector<AStarNode> closedList;
 	std::vector<GridCoordinates> solution;
 
 	int startId, endId;

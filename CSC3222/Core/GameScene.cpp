@@ -145,3 +145,81 @@ void GameScene::AddEntities()
 		physicsWorld.AddSpring(&gameObjects, gameObjects.GetId(*playerObject), gameObjects.GetId(*createdDrones.at(i)));
 	}
 }
+
+void GameScene::AddJenkinsSquad()
+{
+	//Select random base square
+	srand(time(NULL));
+	int chosenBase = rand() % 18;
+	int currentBase = 0;
+	Vec3 basePosition = Vec3(0, 0, 0);
+	bool found = false;
+
+	//Cylce through objects
+	DemoGameObject *object = gameObjects.TryToGetFirst();
+	if (object != nullptr)
+	{
+		//If object is a base tile
+		if (object->terrainType == BASE_CAMP)
+		{
+			if (currentBase == chosenBase)
+			{
+				basePosition = object->currentPhysState.position;
+				found = true;
+			}
+			currentBase++;
+		}
+
+		while (gameObjects.IsNext() && !found)
+		{
+			object = gameObjects.Next();
+			if (object != nullptr)
+			{
+				//If object is a base tile
+				if (object->terrainType == BASE_CAMP)
+				{
+					if (currentBase == chosenBase)
+					{
+						basePosition = object->currentPhysState.position;
+						found = true;
+					}
+					currentBase++;
+				}
+			}
+		}
+	}
+
+
+	DemoGameObject *addObject = gameObjects.CreateNew();
+	vector<DemoGameObject*> createdDrones = vector<DemoGameObject*>();
+	for (int i = 0; i < 9; i++)
+	{
+		//Add drone
+		addObject = gameObjects.CreateNew();
+		addObject->ConfigureDefaultDrone(1, 1);
+		//addObject->currentPhysState.position = Vec3(0.5*(i + 1), 0.5*(i + 1), 0.05*(i + 1));
+		addObject->currentPhysState.position = Vec3(basePosition.x, basePosition.y, 0.05*(i + 1));
+		addObject->currentPhysState.radius = 0.2;
+
+		createdDrones.push_back(addObject);
+	}
+
+	//Add player
+	DemoGameObject *playerObject = gameObjects.CreateNew();
+	playerObject->ConfigureDefaultPlayer(1, 2);
+	playerObject->entityType = AI;
+	playerObject->aiType = JENKINS_LEADER;
+	playerObject->currentPhysState.position = Vec3(basePosition.x, basePosition.y, 1);
+	playerObject->currentPhysState.radius = 0.2;
+	
+	AStar pathfinder = AStar();
+	playerObject->aiData.origin = GridCoordinates(basePosition.x, basePosition.y);
+	playerObject->aiData.destination = GridCoordinates(7, 0);
+	playerObject->aiData.calculatedPath = pathfinder.CalculateAStarPath(playerObject->aiData.origin, playerObject->aiData.destination);
+
+	//Add springs
+	for (int i = 0; i < 9; i++)
+	{
+		physicsWorld.AddSpring(&gameObjects, gameObjects.GetId(*playerObject), gameObjects.GetId(*createdDrones.at(i)));
+	}
+}

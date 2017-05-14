@@ -29,8 +29,8 @@ void Collision::IndividualCheck(DataArray<DemoGameObject>* gameObjects, DataArra
 		//since in this implementation, the only objects which can move are circles.
 		if (object != initialObject) {
 
-			//Drone vs Player
-			if (object->entityType == PLAYER)
+			//Drone vs Player/AI
+			if (object->entityType == PLAYER || object->entityType == AI)
 			{
 				overlapDistance = CircleCircleCheck(initialObject, object);
 				if (overlapDistance != Vec3(0, 0, 0))
@@ -40,7 +40,7 @@ void Collision::IndividualCheck(DataArray<DemoGameObject>* gameObjects, DataArra
 			}
 
 			//Drone vs Drone
-			else if (object->entityType == DRONE && initialObject->entityType != PLAYER)
+			else if (object->entityType == DRONE && initialObject->entityType != PLAYER && initialObject->entityType != AI)
 			{
 				overlapDistance = CircleCircleCheck(initialObject, object);
 				if (overlapDistance != Vec3(0, 0, 0))
@@ -73,7 +73,7 @@ void Collision::IndividualCheck(DataArray<DemoGameObject>* gameObjects, DataArra
 				if (object != initialObject) {
 
 					//Drone vs Player
-					if (object->entityType == PLAYER)
+					if (object->entityType == PLAYER || object->entityType == AI)
 					{
 						overlapDistance = CircleCircleCheck(initialObject, object);
 						if (overlapDistance != Vec3(0, 0, 0))
@@ -83,7 +83,7 @@ void Collision::IndividualCheck(DataArray<DemoGameObject>* gameObjects, DataArra
 					}
 
 					//Drone vs Drone
-					else if (object->entityType == DRONE && initialObject->entityType != PLAYER)
+					else if (object->entityType == DRONE && initialObject->entityType != PLAYER && initialObject->entityType != AI)
 					{
 						overlapDistance = CircleCircleCheck(initialObject, object);
 						if (overlapDistance != Vec3(0, 0, 0))
@@ -117,7 +117,7 @@ void Collision::DetectTerrain(DataArray<DemoGameObject>* gameObjects)
 	if (object != nullptr)
 	{
 		//Only perform checks on objects that can move
-		if (object->entityType == PLAYER || object->entityType == DRONE)
+		if (object->entityType == PLAYER || object->entityType == DRONE || object->entityType == AI)
 		{
 			CheckTerrain(gameObjects, object);
 
@@ -133,7 +133,7 @@ void Collision::DetectTerrain(DataArray<DemoGameObject>* gameObjects)
 			if (object != nullptr)
 			{
 				//Only perform checks on objects that can move
-				if (object->entityType == PLAYER || object->entityType == DRONE)
+				if (object->entityType == PLAYER || object->entityType == DRONE || object->entityType == AI)
 				{
 					CheckTerrain(gameObjects, object);
 
@@ -229,7 +229,7 @@ void Collision::CheckCollisions(DataArray<DemoGameObject>* gameObjects, DataArra
 		if (object != nullptr)
 		{
 			//Only perform checks on objects that can move
-			if (object->entityType == PLAYER || object->entityType == DRONE)
+			if (object->entityType == PLAYER || object->entityType == DRONE || object->entityType == AI)
 			{
 				IndividualCheck(gameObjects, collisions, object);
 
@@ -245,7 +245,7 @@ void Collision::CheckCollisions(DataArray<DemoGameObject>* gameObjects, DataArra
 				if (object != nullptr)
 				{
 					//Only perform checks on objects that can move
-					if (object->entityType == PLAYER || object->entityType == DRONE)
+					if (object->entityType == PLAYER || object->entityType == DRONE || object->entityType == AI)
 					{
 						IndividualCheck(gameObjects, collisions, object);
 

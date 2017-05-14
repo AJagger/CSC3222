@@ -67,6 +67,7 @@ void DemoKeyInterpreter::ProcessKeyPresses(std::vector<int> keys, GameState &gam
 					case CONFIG_PLAYER_RIGHT: Player_Right(gameScene); break;
 					case CONFIG_DEBUG_TOGGLE: Debug_Toggle(gameState); break;
 					case CONFIG_START_SIMULATION: StartSim(gameState, gameScene); break;
+					case CONFIG_START_JENKINS: StartJenkins(gameState, gameScene); break;
 					}
 				}
 
@@ -172,6 +173,16 @@ void DemoKeyInterpreter::StartSim(GameState & gamestate, GameScene & gamescene)
 	if(!gamestate.simulationStarted)
 	{
 		gamescene.AddEntities();
+		gamestate.simulationStarted = true;
+	}
+}
+
+void DemoKeyInterpreter::StartJenkins(GameState & gamestate, GameScene & gamescene)
+{
+	if (!gamestate.jenkinsActive)
+	{
+		gamescene.AddJenkinsSquad();
+		gamestate.jenkinsActive = true;
 		gamestate.simulationStarted = true;
 	}
 }

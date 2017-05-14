@@ -14,9 +14,12 @@ public:
 	DemoGameRules();
 	~DemoGameRules();
 
-	static void EnactGameRules(GameScene *gameScene, GameState *gameState);
+	void EnactGameRules(GameScene *gameScene, GameState *gameState);
 
 private:
 	static void RemoveFinishedDrones(GameScene *gameScene);
 	static bool DronesRemain(GameScene *gameScene, GameState *gameState);
+	void JenkinsAI(GameScene *gameScene);
+
+	AStar pathfinder = AStar();
 };

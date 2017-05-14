@@ -32,5 +32,6 @@ public:
 
 	void LoadLevel();
 	void AddEntities();
+	void AddJenkinsSquad();
 
 };

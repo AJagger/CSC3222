@@ -42,7 +42,8 @@ private:
 		CONFIG_PLAYER_RIGHT = KEYBOARD_A,
 		CONFIG_FORCE_END = KEYBOARD_C,
 		CONFIG_DEBUG_TOGGLE = KEYBOARD_L,
-		CONFIG_START_SIMULATION = KEYBOARD_K
+		CONFIG_START_SIMULATION = KEYBOARD_K,
+		CONFIG_START_JENKINS = KEYBOARD_J
 	};
 
 	void Force_End(GameState &gamestate);
@@ -53,6 +54,7 @@ private:
 	void Player_Right(GameScene &gamescene);
 	void Debug_Toggle(GameState &gamestate);
 	void StartSim(GameState &gamestate, GameScene &gamescene);
+	void StartJenkins(GameState &gamestate, GameScene &gamescene);
 	int DetermineOrientation(std::vector<int> keys);
 
 	vector<DemoGameObject*> controlledEntities;

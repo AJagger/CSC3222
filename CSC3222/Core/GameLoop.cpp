@@ -39,13 +39,14 @@ void GameLoop::RunLoop()
 {
 	//Set up the Key Interpreter to process user input and the Draw class to interface between the renderer and other parts of the engine
 	DemoKeyInterpreter keyInterp = DemoKeyInterpreter();
+	DemoGameRules gameRules = DemoGameRules();
 	Draw renderer = Draw();
 
 	lastTick = clock();
 
-	AStar aStar = AStar();
-	aStar.PerformAStar();
-	aStar.PrintSolution();
+	//AStar aStar = AStar();
+	//aStar.PerformAStar();
+	//aStar.PrintSolution();
 
 	//Main loop
 	while(!state->end && state->gameWindow.UpdateWindow())
@@ -63,7 +64,7 @@ void GameLoop::RunLoop()
 			//Process Inputs
 			keyInterp.ProcessKeyPresses(input, *state, *scene);
 			//Process GameRules
-			DemoGameRules::EnactGameRules(scene, state);
+			gameRules.EnactGameRules(scene, state);
 			//UpdatePositions (collision detection & resolution happens here)
 			scene->physicsWorld.SimulateWorld(&scene->gameObjects, dt);
 			//RenderScene

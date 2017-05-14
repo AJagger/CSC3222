@@ -20,4 +20,8 @@ GameObject::GameObject()
 
 GameObject::~GameObject()
 {
+	if(aiData.calculatedPath != nullptr)
+	{
+		delete aiData.calculatedPath;
+	}
 }
