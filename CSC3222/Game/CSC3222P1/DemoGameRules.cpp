@@ -140,6 +140,7 @@ void DemoGameRules::JenkinsAI(GameScene * gameScene)
 				//If Jenkin's leader is at the end of the path, set "end" value to true so no further updates occur.
 				if(jenkinsLeader->aiData.currentTargetLocation == jenkinsLeader->aiData.calculatedPath->size())
 				{
+					jenkinsLeader->currentPhysState.velocity = Vec3(0, 0, 0);
 					jenkinsLeader->end = true;
 				}
 				//else, update the aiData to target the next node in the calculated path
@@ -153,6 +154,8 @@ void DemoGameRules::JenkinsAI(GameScene * gameScene)
 
 			//Move Jenkin's leader towards the center point of the next node in the path
 			Vec3 force = Vec3((float)targettedPosition.x + 0.5f - jenkinsLeader->currentPhysState.position.x, (float)targettedPosition.y + 0.5f - jenkinsLeader->currentPhysState.position.y, 0) / 5;
+			//jenkinsLeader->currentPhysState.velocity.x = force.x * 5;
+			//jenkinsLeader->currentPhysState.velocity.y = force.y * 5;
 			jenkinsLeader->currentPhysState.actingForce.x = force.x;
 			jenkinsLeader->currentPhysState.actingForce.y = force.y;
 			//jenkinsLeader->currentPhysState.position.x = targettedPosition.x + 0.5f;

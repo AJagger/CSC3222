@@ -197,16 +197,15 @@ void GameScene::AddJenkinsSquad()
 		//Add drone
 		addObject = gameObjects.CreateNew();
 		addObject->ConfigureDefaultDrone(1, 1);
-		//addObject->currentPhysState.position = Vec3(0.5*(i + 1), 0.5*(i + 1), 0.05*(i + 1));
-		addObject->currentPhysState.position = Vec3(basePosition.x, basePosition.y, 0.05*(i + 1));
+		addObject->currentPhysState.position = Vec3(basePosition.x + ((float)i/10 - 0.4f), basePosition.y + ((float)i / 10 - 0.4f), 0.05*(i + 1));
 		addObject->currentPhysState.radius = 0.2;
 
 		createdDrones.push_back(addObject);
 	}
 
-	//Add player
+	//Add Jenkins Leader
 	DemoGameObject *playerObject = gameObjects.CreateNew();
-	playerObject->ConfigureDefaultPlayer(1, 2);
+	playerObject->ConfigureDefaultPlayer(1, 12);
 	playerObject->entityType = AI;
 	playerObject->aiType = JENKINS_LEADER;
 	playerObject->currentPhysState.position = Vec3(basePosition.x, basePosition.y, 1);

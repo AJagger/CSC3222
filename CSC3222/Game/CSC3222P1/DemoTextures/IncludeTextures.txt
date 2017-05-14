@@ -10,3 +10,5 @@
 9,insideCastle.tga
 10,gate.tga
 11,base.tga
+12,jenkins.tga
+13,tactical.tga

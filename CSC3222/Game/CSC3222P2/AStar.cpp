@@ -28,14 +28,14 @@ AStar::AStar()
 			//Set the Tile type:
 			switch (tiles.at(gridNumber))
 			{
-			case 'O': nodes[y][x].passable = true; nodes[y][x].velocityModifier = 1.0f; break;
-			case 'B': nodes[y][x].passable = true; nodes[y][x].velocityModifier = 1.0f; break;
-			case 'C': nodes[y][x].passable = true; nodes[y][x].velocityModifier = 1.0f; break;
-			case 'F': nodes[y][x].passable = true; nodes[y][x].velocityModifier = 0.5f; break;
-			case 'R': nodes[y][x].passable = true; nodes[y][x].velocityModifier = 0.35f; break;
-			case 'G': nodes[y][x].passable = true; nodes[y][x].velocityModifier = 0.15f; break;
-			case 'W': nodes[y][x].passable = false; nodes[y][x].velocityModifier = 1.0f; break;
-			case 'A': nodes[y][x].passable = true; nodes[y][x].velocityModifier = 1.0f; break;
+			case 'O': nodes[y][x].passable = true; nodes[y][x].velocityModifier = 1.0f; nodes[y][x].isOpenTerrain = true; break;
+			case 'B': nodes[y][x].passable = true; nodes[y][x].velocityModifier = 1.0f; nodes[y][x].isOpenTerrain = false; break;
+			case 'C': nodes[y][x].passable = true; nodes[y][x].velocityModifier = 1.0f; nodes[y][x].isOpenTerrain = false; break;
+			case 'F': nodes[y][x].passable = true; nodes[y][x].velocityModifier = 0.5f; nodes[y][x].isOpenTerrain = false; break;
+			case 'R': nodes[y][x].passable = true; nodes[y][x].velocityModifier = 0.35f; nodes[y][x].isOpenTerrain = true; break;
+			case 'G': nodes[y][x].passable = true; nodes[y][x].velocityModifier = 0.15f; nodes[y][x].isOpenTerrain = false; break;
+			case 'W': nodes[y][x].passable = false; nodes[y][x].velocityModifier = 1.0f; nodes[y][x].isOpenTerrain = false; break;
+			case 'A': nodes[y][x].passable = true; nodes[y][x].velocityModifier = 1.0f; nodes[y][x].isOpenTerrain = false; break;
 			}
 			gridNumber++;
 		}
@@ -62,7 +62,7 @@ vector<GridCoordinates>* AStar::PerformAStar()
 	nodes[startLocation.y][startLocation.x].g = 0;
 	nodes[startLocation.y][startLocation.x].h = H(startLocation, endLocation);
 	nodes[startLocation.y][startLocation.x].f = nodes[startLocation.y][startLocation.x].g + nodes[startLocation.y][startLocation.x].h;
-	openList.push(nodes[startLocation.y][startLocation.x]);
+	openList.push_back(&nodes[startLocation.y][startLocation.x]);
 	openListIds.push_back(nodes[startLocation.y][startLocation.x].nodeId);
 
 	while(!reachedEnd)
@@ -70,14 +70,14 @@ vector<GridCoordinates>* AStar::PerformAStar()
 		//Check to see that the list is not empty. If it is, solution cannot be solved.
 		if (openList.size() != 0)
 		{
-			AStarNode p = openList.top();
+			AStarNode *p = openList.back();
 
 			//Check to see if p is the end node
-			if (p.nodeId == endId)
+			if (p->nodeId == endId)
 			{
 				closedList.push_back(p);
-				openList.pop();
-				DeleteOpenListIds(p.nodeId);
+				openList.pop_back();
+				DeleteOpenListIds(p->nodeId);
 				reachedEnd = true;
 				solved = true;
 			}
@@ -85,8 +85,9 @@ vector<GridCoordinates>* AStar::PerformAStar()
 			else
 			{
 				closedList.push_back(p);
-				openList.pop();
-				DeleteOpenListIds(p.nodeId);
+				openList.pop_back();
+				DeleteOpenListIds(p->nodeId);
+				std::sort(openList.begin(), openList.end(), CompareAStarNode());
 
 				for (int i = 0; i < 8; i++)
 				{
@@ -105,8 +106,8 @@ vector<GridCoordinates>* AStar::PerformAStar()
 					}
 
 					//Check that the grid cell exists and can be moved through
-					int updatedX = p.location.x + coodinateChangeQ.x;
-					int updatedY = p.location.y + coodinateChangeQ.y;
+					int updatedX = p->location.x + coodinateChangeQ.x;
+					int updatedY = p->location.y + coodinateChangeQ.y;
 
 
 					//TOFIX: issue with updatedY being allowed to be 20.
@@ -115,9 +116,9 @@ vector<GridCoordinates>* AStar::PerformAStar()
 						//Temp AStarNode q
 						AStarNode q;
 						q.nodeId = nodes[updatedY][updatedX].nodeId;
-						q.g = G(p.g, coodinateChangeQ);
+						q.g = G(p->g, coodinateChangeQ, nodes[updatedY][updatedX].velocityModifier);
 						q.h = H(nodes[updatedY][updatedX].location, endLocation);
-						q.f = nodes[updatedY][updatedX].g + nodes[updatedY][updatedX].h;
+						q.f = q.g + q.h;
 
 						//Check to see if q is in the openList
 						bool inOpenList = false;
@@ -133,7 +134,7 @@ vector<GridCoordinates>* AStar::PerformAStar()
 
 						for (int cl = 0; cl < closedList.size(); cl++)
 						{
-							if (closedList.at(cl).nodeId == q.nodeId)
+							if (closedList.at(cl)->nodeId == q.nodeId)
 							{
 								inClosedList = true;
 								break;
@@ -148,7 +149,8 @@ vector<GridCoordinates>* AStar::PerformAStar()
 								nodes[updatedY][updatedX].g = q.g;
 								nodes[updatedY][updatedX].h = q.h;
 								nodes[updatedY][updatedX].f = q.f;
-								nodes[updatedY][updatedX].parentId = p.nodeId;
+								nodes[updatedY][updatedX].parentId = p->nodeId;
+								std::sort(openList.begin(), openList.end(), CompareAStarNode());
 							}
 						}
 						//If not, add to open list
@@ -157,9 +159,10 @@ vector<GridCoordinates>* AStar::PerformAStar()
 							nodes[updatedY][updatedX].g = q.g;
 							nodes[updatedY][updatedX].h = q.h;
 							nodes[updatedY][updatedX].f = q.f;
-							nodes[updatedY][updatedX].parentId = p.nodeId;
-							openList.push(nodes[updatedY][updatedX]);
+							nodes[updatedY][updatedX].parentId = p->nodeId;
+							openList.push_back(&nodes[updatedY][updatedX]);
 							openListIds.push_back(nodes[updatedY][updatedX].nodeId);
+							std::sort(openList.begin(), openList.end(), CompareAStarNode());
 						}
 					}
 				}
@@ -227,6 +230,8 @@ vector<GridCoordinates>* AStar::CalculateAStarPath(GridCoordinates start, GridCo
 	startId = nodes[start.y][start.x].nodeId;
 	endId = nodes[end.y][end.x].nodeId;
 
+	PrintSolution();
+
 	return PerformAStar();
 }
 
@@ -262,16 +267,16 @@ int AStar::H(GridCoordinates start, GridCoordinates end)
 	return h;
 }
 
-int AStar::G(int previousG, GridCoordinates directionVector)
+int AStar::G(int previousG, GridCoordinates directionVector, float velocityModifier)
 {
 	//If diagonal add 14, else add 10
 	if((directionVector.x == -1 || directionVector.x == 1) && (directionVector.y == -1 || directionVector.y == 1))
 	{
-		return previousG + 14;
+		return previousG + (14 / velocityModifier);
 	}
 	else
 	{
-		return previousG + 10;
+		return previousG + (10 / velocityModifier);
 	}
 }
 

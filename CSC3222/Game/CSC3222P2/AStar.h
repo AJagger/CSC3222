@@ -18,6 +18,7 @@ struct AStarNode
 	GridCoordinates location = GridCoordinates(0,0);
 	bool passable;
 	float velocityModifier;
+	bool isOpenTerrain;
 
 	float g; // cost of this node + it's predecessors
 	float h; // heuristic estimate of distance to goal
@@ -31,10 +32,18 @@ struct AStarNode
 	}
 };
 
+//For use with std::sort, to sort the vectors in decending order
 struct CompareAStarNode {
-	bool operator()(AStarNode const  &n1, AStarNode const  &n2) {
-		// return "true" if "p1" is ordered before "p2", for example:
-		return n1.f < n2.f;
+	bool operator()(AStarNode const  *n1, AStarNode const  *n2) const
+	{
+		//If both f values are the same, sort by h value
+		if(n1->f == n2->f)
+		{
+			return n1->h > n2->h;
+		}
+
+		//Else sort by f value
+		return n1->f > n2->f;
 	}
 };
 
@@ -47,15 +56,15 @@ public:
 	std::vector<GridCoordinates>* PerformAStar();
 	std::vector<GridCoordinates>* CalculateAStarPath(GridCoordinates start, GridCoordinates end);
 	int H(GridCoordinates start, GridCoordinates end);
-	int G(int previousG, GridCoordinates directionVector);
+	int G(int previousG, GridCoordinates directionVector, float velocityModifier);
 	GridCoordinates FindNode(int id);
 	void PrintSolution();
 
 	static const int GRID_SIZE = 20;
 	AStarNode nodes[GRID_SIZE][GRID_SIZE] = {};
-	std::priority_queue<AStarNode, std::vector<AStarNode>, CompareAStarNode> openList;
+	std::vector<AStarNode*> openList;
 	std::vector<int> openListIds;
-	std::vector<AStarNode> closedList;
+	std::vector<AStarNode*> closedList;
 	std::vector<GridCoordinates> solution;
 
 	int startId, endId;
