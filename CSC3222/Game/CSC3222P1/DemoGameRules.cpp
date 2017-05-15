@@ -77,7 +77,7 @@ bool DemoGameRules::DronesRemain(GameScene * gameScene, GameState * gameState)
 			if (object != nullptr)
 			{
 				//Count drones
-				if (object->entityType)
+				if (object->entityType == DRONE)
 				{
 					droneCount++;
 				}
@@ -85,7 +85,7 @@ bool DemoGameRules::DronesRemain(GameScene * gameScene, GameState * gameState)
 		}
 	}
 
-	if(droneCount == 2)
+	if(droneCount == 0)
 	{
 		return true;
 	}
