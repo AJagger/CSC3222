@@ -29,6 +29,7 @@ public:
 	bool end;
 	bool simulationStarted = false;
 	bool jenkinsActive = false;
+	bool tacticalActive = false;
 
 	//Global Game Data
 	Window gameWindow = Window("DemoGameEngine", 1920, 1200, false);

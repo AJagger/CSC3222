@@ -1,4 +1,5 @@
-This submitted solution only includes work for Project 1.
+The first submitted solution only contained work for Project 1.
+This submitted solution includes work for both Project 1 and Project 2.
 
 Since the framework I am using is based very heavily on the game engine written for CSC3224, the files that have been created or received major changes for coursework 1 of CSC3222
 have comments at the top identifying them. These include:

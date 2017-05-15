@@ -17,6 +17,7 @@
 #include "../Frameworks/DataArray.cpp" //Temp fix to Linker Error
 #include "../Renderer/SOIL/SOIL.h"
 #include "../Frameworks/ResouceLoader.h"
+#include "../Game/CSC3222P2/AStar.h"
 
 GameScene::GameScene(DataArray<Mesh*> *gameMeshes, DataArray<GLuint> *gameTextures)
 {
@@ -214,7 +215,125 @@ void GameScene::AddJenkinsSquad()
 	AStar pathfinder = AStar();
 	playerObject->aiData.origin = GridCoordinates(basePosition.x, basePosition.y);
 	playerObject->aiData.destination = GridCoordinates(7, 0);
-	playerObject->aiData.calculatedPath = pathfinder.CalculateAStarPath(playerObject->aiData.origin, playerObject->aiData.destination);
+	playerObject->aiData.calculatedPath = pathfinder.CalculateAStarPath(playerObject->aiData.origin, playerObject->aiData.destination, JENKINS_PATHING);
+
+	//Add springs
+	for (int i = 0; i < 9; i++)
+	{
+		physicsWorld.AddSpring(&gameObjects, gameObjects.GetId(*playerObject), gameObjects.GetId(*createdDrones.at(i)));
+	}
+}
+
+void GameScene::AddTacticalSquad()
+{
+	//Select random base square
+	srand(time(NULL));
+	int chosenBase = rand() % 18;
+	int currentBase = 0;
+	Vec3 basePosition = Vec3(0, 0, 0);
+	bool found = false;
+
+	//Cylce through objects
+	DemoGameObject *object = gameObjects.TryToGetFirst();
+	if (object != nullptr)
+	{
+		//If object is a base tile
+		if (object->terrainType == BASE_CAMP)
+		{
+			if (currentBase == chosenBase)
+			{
+				basePosition = object->currentPhysState.position;
+				found = true;
+			}
+			currentBase++;
+		}
+
+		while (gameObjects.IsNext() && !found)
+		{
+			object = gameObjects.Next();
+			if (object != nullptr)
+			{
+				//If object is a base tile
+				if (object->terrainType == BASE_CAMP)
+				{
+					if (currentBase == chosenBase)
+					{
+						basePosition = object->currentPhysState.position;
+						found = true;
+					}
+					currentBase++;
+				}
+			}
+		}
+	}
+
+	//Select random wall to break through
+	int chosenWall = rand() % 10;
+	int currentWall = 0;
+	Vec3 wallPosition = Vec3(0, 0, 0);
+	bool wallFound = false;
+
+	//Cylce through objects
+	DemoGameObject *wall = gameObjects.TryToGetFirst();
+	if (wall != nullptr)
+	{
+		//If object is a wall
+		if (wall->terrainType == WALL)
+		{
+			if (currentWall == chosenWall)
+			{
+				wallPosition = wall->currentPhysState.position;
+				wallFound = true;
+			}
+			currentWall++;
+		}
+
+		while (gameObjects.IsNext() && !wallFound)
+		{
+			wall = gameObjects.Next();
+			if (wall != nullptr)
+			{
+				//If object is a wall
+				if (wall->terrainType == WALL)
+				{
+					if (currentWall == chosenWall)
+					{
+						wallPosition = wall->currentPhysState.position;
+						wallFound = true;
+					}
+					currentWall++;
+				}
+			}
+		}
+	}
+
+
+	DemoGameObject *addObject = gameObjects.CreateNew();
+	vector<DemoGameObject*> createdDrones = vector<DemoGameObject*>();
+	for (int i = 0; i < 9; i++)
+	{
+		//Add drone
+		addObject = gameObjects.CreateNew();
+		addObject->ConfigureDefaultDrone(1, 1);
+		addObject->currentPhysState.position = Vec3(basePosition.x + ((float)i / 10 - 0.4f), basePosition.y + ((float)i / 10 - 0.4f), 0.05*(i + 1));
+		addObject->currentPhysState.radius = 0.2;
+
+		createdDrones.push_back(addObject);
+	}
+
+	//Add Tactical Leader
+	DemoGameObject *playerObject = gameObjects.CreateNew();
+	playerObject->ConfigureDefaultPlayer(1, 13);
+	playerObject->entityType = AI;
+	playerObject->aiType = TACTICAL_LEADER;
+	playerObject->currentPhysState.position = Vec3(basePosition.x, basePosition.y, 1);
+	playerObject->currentPhysState.radius = 0.2;
+
+	AStar pathfinder = AStar();
+	playerObject->aiData.origin = GridCoordinates(basePosition.x, basePosition.y);
+	//playerObject->aiData.destination = GridCoordinates(12, 1);
+	playerObject->aiData.destination = GridCoordinates(wallPosition.x, wallPosition.y + 1); //+1 to Y so that path is found to tile above.
+	playerObject->aiData.calculatedPath = pathfinder.CalculateAStarPath(playerObject->aiData.origin, playerObject->aiData.destination, TACTICAL_PATHING);
 
 	//Add springs
 	for (int i = 0; i < 9; i++)

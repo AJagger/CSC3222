@@ -16,7 +16,15 @@
 #include "../Renderer/nclgl/Vector2.h"
 #include "../Renderer/nclgl/Vector3.h"
 #include "../Game/CSC3222P1/Vec3.h"
-#include "../Game/CSC3222P2/AStar.h"
+#include <vector>
+
+struct GridCoordinates
+{
+	int x, y;
+
+	GridCoordinates() { x = 0; y = 0; }
+	GridCoordinates(int x, int y) { this->x = x; this->y = y; }
+};
 
 struct State
 {

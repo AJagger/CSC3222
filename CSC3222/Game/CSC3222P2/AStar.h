@@ -1,15 +1,21 @@
+/* CSC3222 Code
+* Author: Aidan Jagger | 130281034
+* Class Description:
+* This class is used for all AI pathfinding for the Tactical and Jenkins squad leaders within coursework project 2.
+*/
+
 #pragma once
 #include <queue>
 #include "../../Renderer/nclgl/Vector2.h"
 #include <functional>
+#include "../../Core/GameObject.h"
+#include "../CSC3222P1/DemoGameObject.h"
 
 
-struct GridCoordinates
+enum PathingType
 {
-	int x, y;
-
-	GridCoordinates() { x=0; y=0; }
-	GridCoordinates(int x, int y) { this->x = x; this->y = y; }
+	JENKINS_PATHING = 0,
+	TACTICAL_PATHING = 1
 };
 
 struct AStarNode
@@ -22,7 +28,7 @@ struct AStarNode
 
 	float g; // cost of this node + it's predecessors
 	float h; // heuristic estimate of distance to goal
-	float f; // sum of cumulative cost of predecessors and self and heuristic
+	float f; // sum of cumulative cost of predecessors, self and heuristic
 
 	int parentId;
 
@@ -53,12 +59,13 @@ public:
 	AStar();
 	~AStar();
 
-	std::vector<GridCoordinates>* PerformAStar();
-	std::vector<GridCoordinates>* CalculateAStarPath(GridCoordinates start, GridCoordinates end);
+	std::vector<GridCoordinates>* PerformAStar(PathingType pathingType);
+	std::vector<GridCoordinates>* CalculateAStarPath(GridCoordinates start, GridCoordinates end, PathingType pathingType);
 	int H(GridCoordinates start, GridCoordinates end);
 	int G(int previousG, GridCoordinates directionVector, float velocityModifier);
 	GridCoordinates FindNode(int id);
 	void PrintSolution();
+	void ChangeNodeProperties(GridCoordinates node, TerrainType terrainType);
 
 	static const int GRID_SIZE = 20;
 	AStarNode nodes[GRID_SIZE][GRID_SIZE] = {};

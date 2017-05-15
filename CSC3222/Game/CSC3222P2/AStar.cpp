@@ -1,3 +1,9 @@
+/* CSC3222 Code
+* Author: Aidan Jagger | 130281034
+* Class Description:
+* This class is used for all AI pathfinding for the Tactical and Jenkins squad leaders within coursework project 2.
+*/
+
 #include "stdafx.h"
 #include "AStar.h"
 #include "../../Frameworks/ResouceLoader.h"
@@ -44,16 +50,13 @@ AStar::AStar()
 	//Set default start and end ids
 	startId = 1;
 	endId = 387;
-
-
-
 }
 
 AStar::~AStar()
 {
 }
 
-vector<GridCoordinates>* AStar::PerformAStar()
+vector<GridCoordinates>* AStar::PerformAStar(PathingType pathingType)
 {
 	bool reachedEnd = false;
 	bool solved = false;
@@ -110,13 +113,16 @@ vector<GridCoordinates>* AStar::PerformAStar()
 					int updatedY = p->location.y + coodinateChangeQ.y;
 
 
-					//TOFIX: issue with updatedY being allowed to be 20.
-					if(updatedX >= 0 && updatedX < GRID_SIZE && updatedY >= 0 && updatedY < GRID_SIZE && nodes[updatedY][updatedX].passable)
+					//Do not proceed if the grid cell is out of scope, or if the tile is not passable. If the pathing type is tactical, then proceed regardless of whether the tile is passable.
+					if(updatedX >= 0 && updatedX < GRID_SIZE && updatedY >= 0 && updatedY < GRID_SIZE && (nodes[updatedY][updatedX].passable /*|| pathingType == TACTICAL_PATHING*/))
 					{
 						//Temp AStarNode q
 						AStarNode q;
 						q.nodeId = nodes[updatedY][updatedX].nodeId;
-						q.g = G(p->g, coodinateChangeQ, nodes[updatedY][updatedX].velocityModifier);
+						//If tactical pathing type, check to see if the terrain is open or not and change the velocityModifier to increase the cost of moving on open terrain if needed.
+						pathingType != TACTICAL_PATHING ? 
+							q.g = G(p->g, coodinateChangeQ, nodes[updatedY][updatedX].velocityModifier) :
+							q.g = G(p->g, coodinateChangeQ, !nodes[updatedY][updatedX].isOpenTerrain ? nodes[updatedY][updatedX].velocityModifier : nodes[updatedY][updatedX].velocityModifier * 0.2);
 						q.h = H(nodes[updatedY][updatedX].location, endLocation);
 						q.f = q.g + q.h;
 
@@ -222,7 +228,7 @@ vector<GridCoordinates>* AStar::PerformAStar()
 	}
 }
 
-vector<GridCoordinates>* AStar::CalculateAStarPath(GridCoordinates start, GridCoordinates end)
+vector<GridCoordinates>* AStar::CalculateAStarPath(GridCoordinates start, GridCoordinates end, PathingType pathingType)
 {
 	//Setup
 	startLocation = start;
@@ -232,7 +238,7 @@ vector<GridCoordinates>* AStar::CalculateAStarPath(GridCoordinates start, GridCo
 
 	PrintSolution();
 
-	return PerformAStar();
+	return PerformAStar(pathingType);
 }
 
 int AStar::H(GridCoordinates start, GridCoordinates end)
@@ -272,11 +278,11 @@ int AStar::G(int previousG, GridCoordinates directionVector, float velocityModif
 	//If diagonal add 14, else add 10
 	if((directionVector.x == -1 || directionVector.x == 1) && (directionVector.y == -1 || directionVector.y == 1))
 	{
-		return previousG + (14 / velocityModifier);
+		return previousG + (14 / velocityModifier);			//Divide by velocity modifier to increase the cost for slower tiles
 	}
 	else
 	{
-		return previousG + (10 / velocityModifier);
+		return previousG + (10 / velocityModifier);			//Divide by velocity modifier to increase the cost for slower tiles
 	}
 }
 
@@ -298,6 +304,21 @@ void AStar::PrintSolution()
 		}
 	}
 
+}
+
+void AStar::ChangeNodeProperties(GridCoordinates node, TerrainType terrainType)
+{
+	switch (terrainType)
+	{
+		case OPEN_TERRAIN: nodes[node.y][node.x].passable = true; nodes[node.y][node.x].velocityModifier = 1.0f; nodes[node.y][node.x].isOpenTerrain = true; break;
+		case BASE_CAMP: nodes[node.y][node.x].passable = true; nodes[node.y][node.x].velocityModifier = 1.0f; nodes[node.y][node.x].isOpenTerrain = false; break;
+		case COVERED_TERRAIN: nodes[node.y][node.x].passable = true; nodes[node.y][node.x].velocityModifier = 1.0f; nodes[node.y][node.x].isOpenTerrain = false; break;
+		case FOREST: nodes[node.y][node.x].passable = true; nodes[node.y][node.x].velocityModifier = 0.5f; nodes[node.y][node.x].isOpenTerrain = false; break;
+		case RIVER: nodes[node.y][node.x].passable = true; nodes[node.y][node.x].velocityModifier = 0.35f; nodes[node.y][node.x].isOpenTerrain = true; break;
+		case GATE: nodes[node.y][node.x].passable = true; nodes[node.y][node.x].velocityModifier = 0.15f; nodes[node.y][node.x].isOpenTerrain = false; break;
+		case WALL: nodes[node.y][node.x].passable = false; nodes[node.y][node.x].velocityModifier = 1.0f; nodes[node.y][node.x].isOpenTerrain = false; break;
+		case INSIDE_CASTLE: nodes[node.y][node.x].passable = true; nodes[node.y][node.x].velocityModifier = 1.0f; nodes[node.y][node.x].isOpenTerrain = false; break;
+	}
 }
 
 void AStar::DeleteOpenListIds(int id)

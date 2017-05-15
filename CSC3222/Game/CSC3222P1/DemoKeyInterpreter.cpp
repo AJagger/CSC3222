@@ -68,6 +68,7 @@ void DemoKeyInterpreter::ProcessKeyPresses(std::vector<int> keys, GameState &gam
 					case CONFIG_DEBUG_TOGGLE: Debug_Toggle(gameState); break;
 					case CONFIG_START_SIMULATION: StartSim(gameState, gameScene); break;
 					case CONFIG_START_JENKINS: StartJenkins(gameState, gameScene); break;
+					case CONFIG_START_TACTICAL: StartTactical(gameState, gameScene); break;
 					}
 				}
 
@@ -183,6 +184,16 @@ void DemoKeyInterpreter::StartJenkins(GameState & gamestate, GameScene & gamesce
 	{
 		gamescene.AddJenkinsSquad();
 		gamestate.jenkinsActive = true;
+		gamestate.simulationStarted = true;
+	}
+}
+
+void DemoKeyInterpreter::StartTactical(GameState & gamestate, GameScene & gamescene)
+{
+	if (!gamestate.tacticalActive)
+	{
+		gamescene.AddTacticalSquad();
+		gamestate.tacticalActive = true;
 		gamestate.simulationStarted = true;
 	}
 }

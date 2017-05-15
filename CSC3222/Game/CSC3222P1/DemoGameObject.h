@@ -32,7 +32,8 @@ enum TerrainType
 
 enum AIType
 {
-	JENKINS_LEADER = 0
+	JENKINS_LEADER = 0,
+	TACTICAL_LEADER = 1
 };
 
 class DemoGameObject : public GameObject

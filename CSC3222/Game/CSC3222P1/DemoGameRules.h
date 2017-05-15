@@ -7,6 +7,7 @@
 #pragma once
 #include "../../Core/GameScene.h"
 #include "../../Core/GameState.h"
+#include "../CSC3222P2/AStar.h"
 
 class DemoGameRules
 {
@@ -19,7 +20,8 @@ public:
 private:
 	static void RemoveFinishedDrones(GameScene *gameScene);
 	static bool DronesRemain(GameScene *gameScene, GameState *gameState);
-	void JenkinsAI(GameScene *gameScene);
+	void SquadAI(GameScene *gameScene);
 
 	AStar pathfinder = AStar();
+	bool mapChanged = false;
 };
